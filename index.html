@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Mean Unicorns Sing In Chiptune by Len.icon</title>
+    <script src="./stages.js"></script>
     <style>
       *{box-sizing:border-box;margin:0;padding:0}
       body{
@@ -105,33 +106,9 @@
 
     <script>
       const GAME_DURATION_SECONDS = 207;
-      const WARN_BEATS = 3;
+      const WARN_BEATS = 1;
       const MUSIC_URL = './hexxel-tampered-532260.mp3';
       const CLUTCH_BONUS = 20;
-
-      const STAGES = [
-        {
-          start: 0,
-          bpm: 65,
-          patterns: [
-            {t:'corners'}, {t:'center'}, {t:'single',r:[1,2,3], c:[1,2,3]},
-          ]
-        },
-        {
-          start: 6,
-          bpm: 65,
-          patterns: [
-            {t:'row',i:[2]}, {t:'corners'}, {t:'col',i:[2]}, {t:'col',i:[1,3]}, {t:'corners'}
-          ]
-        },
-        {
-          start: 30,
-          bpm: 32.5,
-          patterns: [
-            {t:'row',i:[0,1,2,3]}, {t:'row',i:[1,2,3,4]} 
-          ]
-        },
-      ];
 
       const GIRL_BMP = ["...KKK..","...BSS..","..BBSS..","..BBKB..","...KKK..","..KKKKK.","...S.S.."];
       const GIRL_PAL = {K:'#d77bba',S:'#ffdebf',B:'#fbc036'};
@@ -225,7 +202,7 @@
         if(p.t==='row'){ const rows=toArr(p.i??p.r); rows.forEach(r=>{ for(let c=0;c<N;c++) list.push([r,c]); }); }
         else if(p.t==='col'){ const cols=toArr(p.i??p.c); cols.forEach(c=>{ for(let r=0;r<N;r++) list.push([r,c]); }); }
         else if(p.t==='cross'){ const rows=toArr(p.r); const cols=toArr(p.c); rows.forEach(r=>{ for(let c=0;c<N;c++) list.push([r,c]); }); cols.forEach(c=>{ for(let r=0;r<N;r++) list.push([r,c]); }); }
-        else if(p.t==='single'){ const rows=toArr(p.r); const cols=toArr(p.c); rows.forEach(r=>{ cols.forEach(c=>{ list.push([r, c]); })}); }
+        else if(p.t==='area'){ const rows=toArr(p.r); const cols=toArr(p.c); rows.forEach(r=>{ cols.forEach(c=>{ list.push([r, c]); })}); }
         else if(p.t==='corners'){ list.push([0,0],[0,4],[4,0],[4,4]); }
         else if(p.t==='center'){ list.push([2,2]); }
         else if(p.t==='checker'){
@@ -301,15 +278,14 @@
             if(!cell.classList.contains('fire')){
               if(activeWarnings.has(key)){
                 const remSec = activeWarnings.get(key);
-                const displayCd = Math.ceil(remSec); // Displays real-time integer seconds remaining (e.g. 2, 1)
+                const displayCd = Math.ceil(remSec);
 
                 cell.classList.add('warn');
                 cell.querySelector('.cd').textContent = displayCd;
 
-                // Color gradient transitions based on actual remaining seconds
-                let color = '#ffd23f70'; // Yellow (> 1.2s remaining)
-                if (remSec <= 1.2 && remSec > 0.6) color = '#ff9d0070'; // Orange
-                if (remSec <= 0.6) color = '#ff004d70'; // Red
+                let color = '#ffd23f70';
+                if (remSec <= 1.2 && remSec > 0.6) color = '#ff9d0070';
+                if (remSec <= 0.6) color = '#ff004d70';
 
                 cell.style.background = `repeating-linear-gradient(45deg, ${color} 0 10px, #241a3d70 10px 20px)`;
               } else {
@@ -397,7 +373,6 @@
           flashMsg('+' + CLUTCH_BONUS + ' CLUTCH DODGE!', 'clutch', 'Arrow keys / WASD to move. Dodge the rainbow beams!');
         }
 
-        // Calculate exact real-time firing timestamp based on WARN_BEATS and current BPM
         const warnDurationSeconds = WARN_BEATS * (60 / bpm);
         pending.push({
           cells: keyToPattern(pattern), 
@@ -416,7 +391,7 @@
       function updateClock(){
         if(!running) return;
         timeValEl.textContent = Math.min(elapsedSeconds(), GAME_DURATION_SECONDS).toFixed(1);
-        updateCellVisuals(); // Updates the cell warning countdown smoothly every 100ms
+        updateCellVisuals();
       }
 
       function endGame(survived){
@@ -439,7 +414,7 @@
         drawPlayer();
       }
 
-      function launchGame(){
+      async function launchGame(){
         if(gameStarted) return;
         gameStarted = true;
         running = true;
