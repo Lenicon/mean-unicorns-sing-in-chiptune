@@ -1,5 +1,5 @@
 # Mean Unicorns Sing In Chiptune (M.U.S.I.C.)
-A rhythm game where you dodge a mean unicorn's rainbow attacks for JS13K JAM 2026!
+A rhythm game where you dodge a mean unicorn's rainbow attacks for **js13kGames 2026**!
 
 ## CREDITS
 - **Music:** [Tampered by HeXXel](https://pixabay.com/music/video-games-tampered-532260/)
@@ -40,8 +40,8 @@ At the `<script>` section, you will find the following:
   Pattern types you can use inside a stage's "patterns" array:
 
   ```js
-    {t:'row',    r:0-4}             // whole row
-    {t:'col',    c:0-4}             // whole column
+    {t:'row',    i:0-4}             // whole row
+    {t:'col',    i:0-4}             // whole column
     {t:'cross',  r:0-4, c:0-4}      // a row + a column
     {t:'single', r:0-4, c:0-4}      // one cell
     {t:'corners'}                   // all four corners

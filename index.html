@@ -106,7 +106,7 @@
     <audio id="bgm" loop></audio>
 
     <script>
-      const GAME_DURATION_SECONDS = 206;
+      const GAME_DURATION_SECONDS = 207;
       const WARN_BEATS = 2;
       const MUSIC_URL = './hexxel-tampered-532260.mp3';
       const CLUTCH_BONUS = 20;
@@ -114,26 +114,16 @@
       const STAGES = [
         {
           start: 0,
-          bpm: 30,
+          bpm: 70,
           patterns: [
-            {t:'col', c:2}, {t:'row', r:4}, {t:'col', c:0}, {t:'col', c:4},
-            {t:'single', r:2, c:2}, {t:'corners'}, {t:'row', r:2}, {t:'col', c:2},
+            {t:'corners'}, {t:'center'}
           ]
         },
         {
-          start: 20,
-          bpm: 105,
+          start: 6,
+          bpm: 65,
           patterns: [
-            {t:'cross', r:2, c:2}, {t:'row', r:1}, {t:'row', r:3}, {t:'col', c:1},
-            {t:'col', c:3}, {t:'checker', odd:true}, {t:'checker', odd:false}, {t:'corners'},
-          ]
-        },
-        {
-          start: 40,
-          bpm: 130,
-          patterns: [
-            {t:'cross', r:0, c:0}, {t:'cross', r:4, c:4}, {t:'row', r:2}, {t:'col', c:2},
-            {t:'checker', odd:true}, {t:'corners'}, {t:'checker', odd:false}, {t:'cross', r:2, c:2},
+            {t:'row', i:2}, {t:'col', i:2},
           ]
         },
       ];
@@ -226,10 +216,11 @@
 
       function keyToPattern(p){
         const list = [];
-        if(p.t==='row'){ for(let c=0;c<N;c++) list.push([p.r,c]); }
-        else if(p.t==='col'){ for(let r=0;r<N;r++) list.push([r,p.c]); }
-        else if(p.t==='cross'){ for(let c=0;c<N;c++) list.push([p.r,c]); for(let r=0;r<N;r++) list.push([r,p.c]); }
-        else if(p.t==='single'){ list.push([p.r,p.c]); }
+        const toArr = (val) => Array.isArray(val) ? val : (val !== undefined ? [val] : []);
+        if(p.t==='row'){ const rows=toArr(p.i??p.r); rows.forEach(r=>{ for(let c=0;c<N;c++) list.push([r,c]); }); }
+        else if(p.t==='col'){ const cols=toArr(p.i??p.c); cols.forEach(c=>{ for(let r=0;r<N;r++) list.push([r,c]); }); }
+        else if(p.t==='cross'){ const rows=toArr(p.r); const cols=toArr(p.c); rows.forEach(r=>{ for(let c=0;c<N;c++) list.push([r,c]); }); cols.forEach(c=>{ for(let r=0;r<N;r++) list.push([r,c]); }); }
+        else if(p.t==='single'){ const rows=toArr(p.r); const cols=toArr(p.c); rows.forEach(r=>{ cols.forEach(c=>{ list.push([r, c]); })}); }
         else if(p.t==='corners'){ list.push([0,0],[0,4],[4,0],[4,4]); }
         else if(p.t==='center'){ list.push([2,2]); }
         else if(p.t==='checker'){
@@ -284,6 +275,34 @@
         return idx;
       }
 
+      function updateCellVisuals(){
+        const activeWarnings = new Map();
+        pending.forEach(p => {
+          p.cells.forEach(([r, c]) => {
+            const key = `${r},${c}`;
+            if (!activeWarnings.has(key) || p.countdown < activeWarnings.get(key)) {
+              activeWarnings.set(key, p.countdown);
+            }
+          });
+        });
+
+        for(let r = 0; r < N; r++){
+          for(let c = 0; c < N; c++){
+            const cell = cells[r][c];
+            const key = `${r},${c}`;
+            if(!cell.classList.contains('fire')){
+              if(activeWarnings.has(key)){
+                cell.classList.add('warn');
+                cell.querySelector('.cd').textContent = activeWarnings.get(key);
+              } else {
+                cell.classList.remove('warn');
+                cell.querySelector('.cd').textContent = '';
+              }
+            }
+          }
+        }
+      }
+
       function tick(){
         if(!running) return;
         const elapsed = elapsedSeconds();
@@ -331,7 +350,7 @@
           setTimeout(()=>unicornWrap.classList.remove('blast'), 150);
           const allFiring = firingGroups.flatMap(g=>g.cells);
           const clearDelay = Math.min(300, (60000/bpm)*0.5);
-          setTimeout(()=>{ allFiring.forEach(([r,c])=> cells[r][c].classList.remove('fire')); }, clearDelay);
+          setTimeout(()=>{ allFiring.forEach(([r,c])=> cells[r][c].classList.remove('fire')); updateCellVisuals() }, clearDelay);
         }
 
         scoreEl.textContent = score;
@@ -348,21 +367,7 @@
         pending.push({cells: keyToPattern(pattern), countdown: WARN_BEATS, lastSecond:false});
         beep(440, .06, .16);
 
-        cells.forEach(row=>row.forEach(cell=>{
-          if(!cell.classList.contains('fire')){
-            cell.classList.remove('warn');
-            cell.querySelector('.cd').textContent = '';
-          }
-        }));
-        pending.forEach(p=>{
-          p.cells.forEach(([r,c])=>{
-            const cell = cells[r][c];
-            if(!cell.classList.contains('fire')){
-              cell.classList.add('warn');
-              cell.querySelector('.cd').textContent = p.countdown;
-            }
-          });
-        });
+        updateCellVisuals();
 
         drawPlayer();
         timer = setTimeout(tick, 60000/bpm);
