@@ -1,5 +1,5 @@
 # Mean Unicorns Sing In Chiptune (M.U.S.I.C.)
-A rhythm game where you dodge a mean unicorn's rainbow attacks.
+A rhythm game where you dodge a mean unicorn's rainbow attacks for JS13K JAM 2026!
 
 ## CREDITS
 - **Music:** [Tampered by HeXXel](https://pixabay.com/music/video-games-tampered-532260/)
