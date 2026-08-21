@@ -33,14 +33,12 @@
         font-size:22px;color:#fff;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;
         pointer-events:none
       }
-      @keyframes warnPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.5)}}
       .warn{
         background:repeating-linear-gradient(45deg,#ffd23f70 0 10px,#241a3d70 10px 20px);
-        animation:warnPulse .5s ease-in-out infinite
       }
       @keyframes fireFlash{0%{filter:brightness(1.8)}100%{filter:brightness(1)}}
       .fire{
-        background:repeating-linear-gradient(45deg,#ff004d 0 10px,#ff9d00 10px 20px,#fff700 20px 30px,#3dff5c 30px 40px,#00e5ff 40px 50px,#7b2fff 50px 60px);
+        background:repeating-linear-gradient(45deg,#ff004d 0 10px,#ff9d00 10px 20px,#fff700 20px 30px,#3dff5c 30px 40px,#00e5ff 40px 50px,#7b2fff 50px 60px) !important;
         animation:fireFlash .15s ease-out
       }
       #playerCanvas{position:absolute;pointer-events:none;image-rendering:pixelated;transition:left .1s,top .1s}
@@ -107,23 +105,30 @@
 
     <script>
       const GAME_DURATION_SECONDS = 207;
-      const WARN_BEATS = 2;
+      const WARN_BEATS = 3;
       const MUSIC_URL = './hexxel-tampered-532260.mp3';
       const CLUTCH_BONUS = 20;
 
       const STAGES = [
         {
           start: 0,
-          bpm: 70,
+          bpm: 65,
           patterns: [
-            {t:'corners'}, {t:'center'}
+            {t:'corners'}, {t:'center'}, {t:'single',r:[1,2,3], c:[1,2,3]},
           ]
         },
         {
           start: 6,
           bpm: 65,
           patterns: [
-            {t:'row', i:2}, {t:'col', i:2},
+            {t:'row',i:[2]}, {t:'corners'}, {t:'col',i:[2]}, {t:'col',i:[1,3]}, {t:'corners'}
+          ]
+        },
+        {
+          start: 30,
+          bpm: 32.5,
+          patterns: [
+            {t:'row',i:[0,1,2,3]}, {t:'row',i:[1,2,3,4]} 
           ]
         },
       ];
@@ -276,12 +281,15 @@
       }
 
       function updateCellVisuals(){
+        const elapsed = elapsedSeconds();
         const activeWarnings = new Map();
+
         pending.forEach(p => {
+          const remSec = Math.max(0, p.fireTime - elapsed);
           p.cells.forEach(([r, c]) => {
             const key = `${r},${c}`;
-            if (!activeWarnings.has(key) || p.countdown < activeWarnings.get(key)) {
-              activeWarnings.set(key, p.countdown);
+            if (!activeWarnings.has(key) || remSec < activeWarnings.get(key)) {
+              activeWarnings.set(key, remSec);
             }
           });
         });
@@ -292,12 +300,25 @@
             const key = `${r},${c}`;
             if(!cell.classList.contains('fire')){
               if(activeWarnings.has(key)){
+                const remSec = activeWarnings.get(key);
+                const displayCd = Math.ceil(remSec); // Displays real-time integer seconds remaining (e.g. 2, 1)
+
                 cell.classList.add('warn');
-                cell.querySelector('.cd').textContent = activeWarnings.get(key);
+                cell.querySelector('.cd').textContent = displayCd;
+
+                // Color gradient transitions based on actual remaining seconds
+                let color = '#ffd23f70'; // Yellow (> 1.2s remaining)
+                if (remSec <= 1.2 && remSec > 0.6) color = '#ff9d0070'; // Orange
+                if (remSec <= 0.6) color = '#ff004d70'; // Red
+
+                cell.style.background = `repeating-linear-gradient(45deg, ${color} 0 10px, #241a3d70 10px 20px)`;
               } else {
                 cell.classList.remove('warn');
+                cell.style.background = '';
                 cell.querySelector('.cd').textContent = '';
               }
+            } else {
+              cell.style.background = '';
             }
           }
         }
@@ -318,11 +339,16 @@
 
         let firingGroups = [];
         pending = pending.filter(p=>{
-          p.countdown--;
-          if(p.countdown === 1){
+          const remaining = p.fireTime - elapsed;
+
+          if(remaining <= 1.0 && remaining > 0){
             if(p.cells.some(([r,c])=> player.r===r && player.c===c)) p.lastSecond = true;
           }
-          if(p.countdown<=0){ firingGroups.push(p); return false; }
+
+          if(remaining <= 0.05){ 
+            firingGroups.push(p); 
+            return false; 
+          }
           return true;
         });
 
@@ -333,6 +359,7 @@
           group.cells.forEach(([r,c])=>{
             const cell = cells[r][c];
             cell.classList.remove('warn');
+            cell.style.background = '';
             cell.querySelector('.cd').textContent = '';
             cell.classList.add('fire');
             if(player.r===r && player.c===c) groupHit = true;
@@ -350,7 +377,13 @@
           setTimeout(()=>unicornWrap.classList.remove('blast'), 150);
           const allFiring = firingGroups.flatMap(g=>g.cells);
           const clearDelay = Math.min(300, (60000/bpm)*0.5);
-          setTimeout(()=>{ allFiring.forEach(([r,c])=> cells[r][c].classList.remove('fire')); updateCellVisuals() }, clearDelay);
+          setTimeout(()=>{ 
+            allFiring.forEach(([r,c])=> {
+              cells[r][c].classList.remove('fire');
+              cells[r][c].style.background = '';
+            }); 
+            updateCellVisuals();
+          }, clearDelay);
         }
 
         scoreEl.textContent = score;
@@ -364,7 +397,14 @@
           flashMsg('+' + CLUTCH_BONUS + ' CLUTCH DODGE!', 'clutch', 'Arrow keys / WASD to move. Dodge the rainbow beams!');
         }
 
-        pending.push({cells: keyToPattern(pattern), countdown: WARN_BEATS, lastSecond:false});
+        // Calculate exact real-time firing timestamp based on WARN_BEATS and current BPM
+        const warnDurationSeconds = WARN_BEATS * (60 / bpm);
+        pending.push({
+          cells: keyToPattern(pattern), 
+          fireTime: elapsed + warnDurationSeconds, 
+          lastSecond: false
+        });
+
         beep(440, .06, .16);
 
         updateCellVisuals();
@@ -376,6 +416,7 @@
       function updateClock(){
         if(!running) return;
         timeValEl.textContent = Math.min(elapsedSeconds(), GAME_DURATION_SECONDS).toFixed(1);
+        updateCellVisuals(); // Updates the cell warning countdown smoothly every 100ms
       }
 
       function endGame(survived){
