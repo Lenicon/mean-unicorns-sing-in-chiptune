@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Mean Unicorns Sing In Chiptune by Len.icon</title>
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{
+        background:#0b0620;color:#fff;
+        background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 2px,transparent 2px 4px);
+        font-family:'Courier New',monospace;font-weight:bold;text-transform:uppercase;letter-spacing:1px;
+        display:flex;flex-direction:column;align-items:center;justify-content:center;
+        min-height:100vh;overflow:hidden;user-select:none;image-rendering:pixelated
+      }
+      #hud{
+        font-size:15px;margin:10px 0;display:flex;gap:18px;background:#1a1030;
+        border:3px solid #000;box-shadow:4px 4px 0 #000;padding:6px 14px;text-shadow:2px 2px 0 #000
+      }
+      #stageTag{font-size:14px;opacity:.8}
+      #unicornWrap{margin-bottom:8px;transition:transform .12s}
+      #unicornWrap.blast{transform:scale(1.25) rotate(-6deg)}
+      #grid{
+        position:relative;
+        display:grid;grid-template-columns:repeat(5,60px);grid-template-rows:repeat(5,60px);
+        gap:4px;background:#1a1030;padding:6px;border:3px solid #000;box-shadow:6px 6px 0 #000
+      }
+      .cell{
+        width:60px;height:60px;background:#241a3d;border:2px solid #000;
+        position:relative;overflow:hidden
+      }
+      .cd{
+        position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+        font-size:22px;color:#fff;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;
+        pointer-events:none
+      }
+      @keyframes warnPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.5)}}
+      .warn{
+        background:repeating-linear-gradient(45deg,#ffd23f70 0 10px,#241a3d70 10px 20px);
+        animation:warnPulse .5s ease-in-out infinite
+      }
+      @keyframes fireFlash{0%{filter:brightness(1.8)}100%{filter:brightness(1)}}
+      .fire{
+        background:repeating-linear-gradient(45deg,#ff004d 0 10px,#ff9d00 10px 20px,#fff700 20px 30px,#3dff5c 30px 40px,#00e5ff 40px 50px,#7b2fff 50px 60px);
+        animation:fireFlash .15s ease-out
+      }
+      #playerCanvas{position:absolute;pointer-events:none;image-rendering:pixelated;transition:left .1s,top .1s}
+      #msg{margin-top:14px;font-size:14px;min-height:20px;text-align:center;text-shadow:2px 2px 0 #000;transition:color .15s}
+      #msg.clutch{color:#3dff5c}
+      #restart{
+        margin-top:10px;padding:8px 18px;font-size:13px;font-family:inherit;font-weight:bold;text-transform:uppercase;
+        border:3px solid #000;background:#ff4dff;color:#fff;cursor:pointer;box-shadow:4px 4px 0 #000;display:none
+      }
+      #restart:active{box-shadow:2px 2px 0 #000;transform:translate(2px,2px)}
+      #hearts{display:flex;gap:4px;align-items:center}
+      .heart{width:14px;height:14px;background:#ff004d;border:2px solid #000}
+      .heart.lost{background:#332244}
+      #startOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(11, 6, 32, 0.85);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+      }
+      #startBtn {
+        padding: 14px 28px;
+        font-size: 18px;
+        font-family: inherit;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: 3px solid #000;
+        background: #ff4dff;
+        color: #000;
+        cursor: pointer;
+        box-shadow: 5px 5px 0 #000;
+        margin-top: 15px;
+      }
+      #startBtn:active {
+        box-shadow: 2px 2px 0 #000;
+        transform: translate(3px, 3px);
+      }
+      .I {text-decoration: underline;}
+    </style>
+  </head>
+  <body>
+
+    <div id="startOverlay">
+      <div style="font-size:20px; text-shadow:2px 2px 0 #000; margin-bottom:10px;">
+        <span class="I">M</span>ean <span class="I">U</span>nicorns <span class="I">S</span>ing <span class="I">I</span>n <span class="I">C</span>hiptune by Len.icon</div>
+      <button id="startBtn">CLICK TO START</button>
+    </div>
+
+    <div id="hud">
+      <div>Score: <span id="score">0</span></div>
+      <div>Time: <span id="timeVal">0.0</span>s</div>
+      <div id="hearts"></div>
+      <div id="stageTag">Stage <span id="stageNum">1</span></div>
+    </div>
+    <div id="unicornWrap"><canvas id="unicornCanvas"></canvas></div>
+    <div id="grid"></div>
+    <div id="msg">Arrow keys / WASD to move. Dodge the rainbow!</div>
+    <button id="restart">Restart</button>
+
+    <audio id="bgm" loop></audio>
+
+    <script>
+      const GAME_DURATION_SECONDS = 206;
+      const WARN_BEATS = 2;
+      const MUSIC_URL = './hexxel-tampered-532260.mp3';
+      const CLUTCH_BONUS = 20;
+
+      const STAGES = [
+        {
+          start: 0,
+          bpm: 30,
+          patterns: [
+            {t:'col', c:2}, {t:'row', r:4}, {t:'col', c:0}, {t:'col', c:4},
+            {t:'single', r:2, c:2}, {t:'corners'}, {t:'row', r:2}, {t:'col', c:2},
+          ]
+        },
+        {
+          start: 20,
+          bpm: 105,
+          patterns: [
+            {t:'cross', r:2, c:2}, {t:'row', r:1}, {t:'row', r:3}, {t:'col', c:1},
+            {t:'col', c:3}, {t:'checker', odd:true}, {t:'checker', odd:false}, {t:'corners'},
+          ]
+        },
+        {
+          start: 40,
+          bpm: 130,
+          patterns: [
+            {t:'cross', r:0, c:0}, {t:'cross', r:4, c:4}, {t:'row', r:2}, {t:'col', c:2},
+            {t:'checker', odd:true}, {t:'corners'}, {t:'checker', odd:false}, {t:'cross', r:2, c:2},
+          ]
+        },
+      ];
+
+      const GIRL_BMP = ["...KKK..","...BSS..","..BBSS..","..BBKB..","...KKK..","..KKKKK.","...S.S.."];
+      const GIRL_PAL = {K:'#d77bba',S:'#ffdebf',B:'#fbc036'};
+      const UNI_BMP = ["H........","HH...R..",".HPP.OO.",".SSP..YY",".SSPPCGG","..SSSPC.","..SSSS..","..S..S.."];
+      const UNI_PAL = {H:"#f5d151",P:"#d77bba",S:"#ffe1f6",R:'#ff004d',O:'#ff9d00',Y:'#fff700',G:'#3dff5c',C:'#00e5ff'};
+
+      function drawSprite(canvas, bmp, palette, px){
+        canvas.width = bmp[0].length*px;
+        canvas.height = bmp.length*px;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        bmp.forEach((row,y)=>{
+          [...row].forEach((ch,x)=>{
+            if(ch==='.') return;
+            ctx.fillStyle = palette[ch];
+            ctx.fillRect(x*px, y*px, px, px);
+          });
+        });
+      }
+
+      const N = 5, CELL = 60, GAP = 4, PAD = 6, PLAYER_PX = 6;
+      const gridEl = document.getElementById('grid');
+      const scoreEl = document.getElementById('score');
+      const timeValEl = document.getElementById('timeVal');
+      const heartsEl = document.getElementById('hearts');
+      const stageNumEl = document.getElementById('stageNum');
+      const msgEl = document.getElementById('msg');
+      const restartBtn = document.getElementById('restart');
+      const unicornWrap = document.getElementById('unicornWrap');
+      const startOverlay = document.getElementById('startOverlay');
+      const startBtn = document.getElementById('startBtn');
+      const bgm = document.getElementById('bgm');
+
+      if (MUSIC_URL) { bgm.src = MUSIC_URL; }
+
+      let cells = [];
+      let player = {r:2, c:2};
+      let lives = 3;
+      let score = 0;
+      let pending = [];
+      let running = false;
+      let gameStarted = false;
+      let timer = null;
+      let clockTimer = null;
+      let audioCtx = null;
+      let playerCanvas;
+      let startTime = 0;
+      let currentStageIdx = -1;
+      let stageBeatCounter = 0;
+
+      function buildGrid(){
+        gridEl.innerHTML = '';
+        cells = [];
+        for(let r=0;r<N;r++){
+          let row = [];
+          for(let c=0;c<N;c++){
+            const div = document.createElement('div');
+            div.className = 'cell';
+            const cd = document.createElement('span');
+            cd.className = 'cd';
+            div.appendChild(cd);
+            gridEl.appendChild(div);
+            row.push(div);
+          }
+          cells.push(row);
+        }
+        playerCanvas = document.createElement('canvas');
+        playerCanvas.id = 'playerCanvas';
+        gridEl.appendChild(playerCanvas);
+        drawSprite(playerCanvas, GIRL_BMP, GIRL_PAL, PLAYER_PX);
+        drawSprite(document.getElementById('unicornCanvas'), UNI_BMP, UNI_PAL, 5);
+        heartsEl.innerHTML = '';
+        for(let i=0;i<3;i++){
+          const h = document.createElement('span');
+          h.className = 'heart';
+          heartsEl.appendChild(h);
+        }
+        drawPlayer();
+      }
+
+      function drawPlayer(){
+        const left = PAD + player.c*(CELL+GAP) + (CELL-playerCanvas.width)/2;
+        const top  = PAD + player.r*(CELL+GAP) + (CELL-playerCanvas.height)/2;
+        playerCanvas.style.left = left+'px';
+        playerCanvas.style.top = top+'px';
+      }
+
+      function keyToPattern(p){
+        const list = [];
+        if(p.t==='row'){ for(let c=0;c<N;c++) list.push([p.r,c]); }
+        else if(p.t==='col'){ for(let r=0;r<N;r++) list.push([r,p.c]); }
+        else if(p.t==='cross'){ for(let c=0;c<N;c++) list.push([p.r,c]); for(let r=0;r<N;r++) list.push([r,p.c]); }
+        else if(p.t==='single'){ list.push([p.r,p.c]); }
+        else if(p.t==='corners'){ list.push([0,0],[0,4],[4,0],[4,4]); }
+        else if(p.t==='center'){ list.push([2,2]); }
+        else if(p.t==='checker'){
+          for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+            if(((r+c)%2===0) === !!p.odd) list.push([r,c]);
+          }
+        }
+        return list;
+      }
+
+      function initAudio(){
+        if(!audioCtx){
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if(audioCtx.state === 'suspended'){
+          audioCtx.resume();
+        }
+      }
+
+      function beep(freq, dur, vol){
+        try{
+          initAudio();
+          if (audioCtx.state !== 'running') return;
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.frequency.value = freq;
+          o.type = 'square';
+          g.gain.value = vol;
+          o.connect(g); g.connect(audioCtx.destination);
+          o.start();
+          g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+          o.stop(audioCtx.currentTime + dur);
+        }catch(e){}
+      }
+
+      function flashMsg(text, cls, revertTo){
+        msgEl.textContent = text;
+        if(cls) msgEl.classList.add(cls);
+        setTimeout(()=>{
+          if(cls) msgEl.classList.remove(cls);
+          if(running) msgEl.textContent = revertTo;
+        }, 650);
+      }
+
+      function elapsedSeconds(){
+        return (Date.now() - startTime) / 1000;
+      }
+
+      function stageForTime(t){
+        let idx = 0;
+        for(let i=0;i<STAGES.length;i++){ if(t >= STAGES[i].start) idx = i; }
+        return idx;
+      }
+
+      function tick(){
+        if(!running) return;
+        const elapsed = elapsedSeconds();
+        if(elapsed >= GAME_DURATION_SECONDS){ endGame(true); return; }
+
+        const stageIdx = stageForTime(elapsed);
+        if(stageIdx !== currentStageIdx){ currentStageIdx = stageIdx; stageBeatCounter = 0; }
+        const stage = STAGES[stageIdx];
+        const pattern = stage.patterns[stageBeatCounter % stage.patterns.length];
+        stageBeatCounter++;
+        const bpm = stage.bpm;
+        stageNumEl.textContent = stageIdx+1;
+
+        let firingGroups = [];
+        pending = pending.filter(p=>{
+          p.countdown--;
+          if(p.countdown === 1){
+            if(p.cells.some(([r,c])=> player.r===r && player.c===c)) p.lastSecond = true;
+          }
+          if(p.countdown<=0){ firingGroups.push(p); return false; }
+          return true;
+        });
+
+        let hit = false;
+        let clutch = false;
+        firingGroups.forEach(group=>{
+          let groupHit = false;
+          group.cells.forEach(([r,c])=>{
+            const cell = cells[r][c];
+            cell.classList.remove('warn');
+            cell.querySelector('.cd').textContent = '';
+            cell.classList.add('fire');
+            if(player.r===r && player.c===c) groupHit = true;
+          });
+          if(groupHit){ hit = true; }
+          else {
+            score += 10;
+            if(group.lastSecond) { score += CLUTCH_BONUS; clutch = true; }
+          }
+        });
+
+        if(firingGroups.length){
+          beep(140, .15, .22);
+          unicornWrap.classList.add('blast');
+          setTimeout(()=>unicornWrap.classList.remove('blast'), 150);
+          const allFiring = firingGroups.flatMap(g=>g.cells);
+          const clearDelay = Math.min(300, (60000/bpm)*0.5);
+          setTimeout(()=>{ allFiring.forEach(([r,c])=> cells[r][c].classList.remove('fire')); }, clearDelay);
+        }
+
+        scoreEl.textContent = score;
+
+        if(hit){
+          lives--;
+          const hearts = [...heartsEl.children];
+          hearts.forEach((h,i)=> h.classList.toggle('lost', i>=lives));
+          if(lives<=0){ endGame(false); return; }
+        } else if(clutch){
+          flashMsg('+' + CLUTCH_BONUS + ' CLUTCH DODGE!', 'clutch', 'Arrow keys / WASD to move. Dodge the rainbow beams!');
+        }
+
+        pending.push({cells: keyToPattern(pattern), countdown: WARN_BEATS, lastSecond:false});
+        beep(440, .06, .16);
+
+        cells.forEach(row=>row.forEach(cell=>{
+          if(!cell.classList.contains('fire')){
+            cell.classList.remove('warn');
+            cell.querySelector('.cd').textContent = '';
+          }
+        }));
+        pending.forEach(p=>{
+          p.cells.forEach(([r,c])=>{
+            const cell = cells[r][c];
+            if(!cell.classList.contains('fire')){
+              cell.classList.add('warn');
+              cell.querySelector('.cd').textContent = p.countdown;
+            }
+          });
+        });
+
+        drawPlayer();
+        timer = setTimeout(tick, 60000/bpm);
+      }
+
+      function updateClock(){
+        if(!running) return;
+        timeValEl.textContent = Math.min(elapsedSeconds(), GAME_DURATION_SECONDS).toFixed(1);
+      }
+
+      function endGame(survived){
+        running = false;
+        clearTimeout(timer);
+        clearInterval(clockTimer);
+        timeValEl.textContent = Math.min(elapsedSeconds(), GAME_DURATION_SECONDS).toFixed(1);
+        msgEl.classList.remove('clutch');
+        const label = survived ? 'You Survived!' : 'Game Over';
+        msgEl.textContent = label + ' — Score: ' + score + '  Time: ' + timeValEl.textContent + 's';
+        restartBtn.style.display = 'inline-block';
+        bgm.pause();
+      }
+
+      function move(dr, dc){
+        if(!running) return;
+        const nr = player.r + dr, nc = player.c + dc;
+        if(nr<0||nr>=N||nc<0||nc>=N) return;
+        player.r = nr; player.c = nc;
+        drawPlayer();
+      }
+
+      function launchGame(){
+        if(gameStarted) return;
+        gameStarted = true;
+        running = true;
+        initAudio();
+        startOverlay.style.display = 'none';
+        startTime = Date.now();
+        if(MUSIC_URL){ bgm.play().catch(e=>console.error("Audio play failed:", e)); }
+        clockTimer = setInterval(updateClock, 100);
+        timer = setTimeout(tick, 60000/STAGES[0].bpm);
+      }
+
+      window.addEventListener('keydown', e=>{
+        const k = e.key.toLowerCase();
+        if(!gameStarted){
+          if(['arrowup','w','arrowdown','s','arrowleft','a','arrowright','d',' '].includes(k)){
+            launchGame();
+          }
+          return;
+        }
+        if(k==='arrowup'||k==='w') move(-1,0);
+        else if(k==='arrowdown'||k==='s') move(1,0);
+        else if(k==='arrowleft'||k==='a') move(0,-1);
+        else if(k==='arrowright'||k==='d') move(0,1);
+        else return;
+        e.preventDefault();
+      });
+
+      startBtn.addEventListener('click', launchGame);
+      restartBtn.addEventListener('click', ()=> location.reload());
+
+      if(MUSIC_URL){ bgm.addEventListener('ended', ()=>{ if(running) endGame(true); }); }
+
+      buildGrid();
+    </script>
+  </body>
+</html>
