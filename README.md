@@ -10,11 +10,12 @@ A rhythm game where you dodge a mean unicorn's rainbow attacks for **js13kGames 
 
 ## HOW TO PLAY
 - Open index.html in any browser
-- Move with arrow keys or WASD (no diagonals).
+- Move with arrow keys or WASD (there's diagonals).
 - Squares that are about to be hit flash yellow with a countdown
   number on them (2, then 1). When the number runs out, that
   pattern turns into a rainbow laser for one beat. Get off those
   cells before then. The rainbow clears again shortly after, before the laser of course.
+- You get more points the more risks you take.
 - 3 hearts. Survive the whole song!!!
 - The song is split into stages that get progressively harder.
 
@@ -42,13 +43,14 @@ stage's `bpm` to that section of your song so the beat lines up.
 Pattern types you can use inside a stage's `patterns` array:
 
 ```js
-  { t: "row", i: [0] }              // whole row (index 0-4)
-  { t: "col", i: [2] }              // whole column (index 0-4)
-  { t: "area", r: [1,2], c: [2] }     // from here to there
+  { t: "row", i: 0 }                // whole row (index 0-4)
+  { t: "col", i: [1,3] }            // whole column (index 0-4)
+  { t: "dots", i: [0,24] }          // one cell (0-24)
+  { t: "random", i: 15 }            // random dots, i = amount
+  { t: "area", r: [1,2], c: [2] }   // from here to there
   { t: "corners" }                  // all four corners
   { t: "center" }                   // just the center cell
   { t: "checker", odd: true/false } // checkerboard cells
-
 ```
 
 **Grid coordinates:** `r` (row) and `c` (column) both go from 0 (top/left) to 4 (bottom/right).

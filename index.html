@@ -13,6 +13,14 @@
         display:flex;flex-direction:column;align-items:center;justify-content:center;
         min-height:100vh;overflow:hidden;user-select:none;image-rendering:pixelated
       }
+      @keyframes shake{
+        0%,100%{transform:translate(0,0)}
+        20%{transform:translate(-6px,-5px)}
+        40%{transform:translate(6px,5px)}
+        60%{transform:translate(-5px,6px)}
+        80%{transform:translate(5px,-6px)}
+      }
+      body.shake{animation:shake .4s ease-in-out}
       #hud{
         font-size:15px;margin:10px 0;display:flex;gap:18px;background:#1a1030;
         border:3px solid #000;box-shadow:4px 4px 0 #000;padding:6px 14px;text-shadow:2px 2px 0 #000
@@ -43,6 +51,8 @@
         animation:fireFlash .15s ease-out
       }
       #playerCanvas{position:absolute;pointer-events:none;image-rendering:pixelated;transition:left .1s,top .1s}
+      #uniFly{position:absolute;pointer-events:none;image-rendering:pixelated;z-index:5;
+        transition:left .6s ease-in-out,top .6s ease-in-out,opacity .5s ease-in-out}
       #msg{margin-top:14px;font-size:14px;min-height:20px;text-align:center;text-shadow:2px 2px 0 #000;transition:color .15s}
       #msg.clutch{color:#3dff5c}
       #restart{
@@ -71,7 +81,7 @@
         text-transform: uppercase;
         border: 3px solid #000;
         background: #ff4dff;
-        color: #000;
+        color: #fff;
         cursor: pointer;
         box-shadow: 5px 5px 0 #000;
         margin-top: 15px;
@@ -99,8 +109,8 @@
     </div>
     <div id="unicornWrap"><canvas id="unicornCanvas"></canvas></div>
     <div id="grid"></div>
-    <div id="msg">Arrow keys / WASD to move. Dodge the rainbow!</div>
-    <button id="restart">Restart</button>
+    <div id="msg">Arrow keys / WASD to move.</div>
+    <button id="restart">ENTER to Restart</button>
 
     <audio id="bgm" loop></audio>
 
@@ -108,14 +118,14 @@
       const GAME_DURATION_SECONDS = 207;
       const WARN_BEATS = 1;
       const MUSIC_URL = './hexxel-tampered-532260.mp3';
-      const CLUTCH_BONUS = 20;
+      const CLUTCH_BONUS = 15;
 
       const GIRL_BMP = ["...KKK..","...BSS..","..BBSS..","..BBKB..","...KKK..","..KKKKK.","...S.S.."];
       const GIRL_PAL = {K:'#d77bba',S:'#ffdebf',B:'#fbc036'};
       const UNI_BMP = ["H........","HH...R..",".HPP.OO.",".SSP..YY",".SSPPCGG","..SSSPC.","..SSSS..","..S..S.."];
       const UNI_PAL = {H:"#f5d151",P:"#d77bba",S:"#ffe1f6",R:'#ff004d',O:'#ff9d00',Y:'#fff700',G:'#3dff5c',C:'#00e5ff'};
 
-      function drawSprite(canvas, bmp, palette, px){
+      function drawSprite(canvas, bmp, palette, px, flipX = false){
         canvas.width = bmp[0].length*px;
         canvas.height = bmp.length*px;
         const ctx = canvas.getContext('2d');
@@ -124,12 +134,17 @@
           [...row].forEach((ch,x)=>{
             if(ch==='.') return;
             ctx.fillStyle = palette[ch];
-            ctx.fillRect(x*px, y*px, px, px);
+            const drawX = flipX ? (bmp[0].length - 1 - x) : x;
+            ctx.fillRect(drawX*px, y*px, px, px);
           });
         });
       }
 
-      const N = 5, CELL = 60, GAP = 4, PAD = 6, PLAYER_PX = 6;
+      const N = 5, CELL = 60, GAP = 4, PAD = 6, PLAYER_PX = 6, UNI_PX = 5;
+      const GRID_W = PAD*2 + N*CELL + (N-1)*GAP;
+      const UNI_DOCK_LEFT = (GRID_W - UNI_BMP[0].length*UNI_PX) / 2;
+      const UNI_DOCK_TOP = -60;
+
       const gridEl = document.getElementById('grid');
       const scoreEl = document.getElementById('score');
       const timeValEl = document.getElementById('timeVal');
@@ -141,20 +156,24 @@
       const startOverlay = document.getElementById('startOverlay');
       const startBtn = document.getElementById('startBtn');
       const bgm = document.getElementById('bgm');
+      const unicornCanvas = document.getElementById('unicornCanvas');
+      const DEFAULT_MSG = 'Arrow keys / WASD to move.';
 
       if (MUSIC_URL) { bgm.src = MUSIC_URL; }
 
       let cells = [];
-      let player = {r:2, c:2};
+      let player = {r:4, c:2, facingLeft:false};
       let lives = 3;
       let score = 0;
       let pending = [];
       let running = false;
       let gameStarted = false;
+      let introDone = false;
       let timer = null;
       let clockTimer = null;
       let audioCtx = null;
       let playerCanvas;
+      let uniFlyCanvas;
       let startTime = 0;
       let currentStageIdx = -1;
       let stageBeatCounter = 0;
@@ -179,21 +198,94 @@
         playerCanvas.id = 'playerCanvas';
         gridEl.appendChild(playerCanvas);
         drawSprite(playerCanvas, GIRL_BMP, GIRL_PAL, PLAYER_PX);
-        drawSprite(document.getElementById('unicornCanvas'), UNI_BMP, UNI_PAL, 5);
+
+        uniFlyCanvas = document.createElement('canvas');
+        uniFlyCanvas.id = 'uniFly';
+        gridEl.appendChild(uniFlyCanvas);
+        drawSprite(uniFlyCanvas, UNI_BMP, UNI_PAL, UNI_PX);
+
+        drawSprite(unicornCanvas, UNI_BMP, UNI_PAL, UNI_PX);
         heartsEl.innerHTML = '';
         for(let i=0;i<3;i++){
           const h = document.createElement('span');
           h.className = 'heart';
           heartsEl.appendChild(h);
         }
+        setupIntro();
+      }
+
+      function setupIntro(){
+        introDone = false;
+        player = {r:4, c:2, facingLeft:false};
+        unicornWrap.style.display = 'none';
+        uniFlyCanvas.style.transition = 'none';
+        uniFlyCanvas.style.opacity = '1';
+        positionUniFlyAt(0, 2);
+        void uniFlyCanvas.offsetWidth;
+        uniFlyCanvas.style.transition = '';
         drawPlayer();
+      }
+
+      function setupGameplay(){
+        introDone = true;
+        player = {r:2, c:2, facingLeft:false};
+        unicornWrap.style.display = '';
+        drawSprite(unicornCanvas, UNI_BMP, UNI_PAL, UNI_PX);
+        uniFlyCanvas.style.transition = 'none';
+        uniFlyCanvas.style.opacity = '0';
+        void uniFlyCanvas.offsetWidth;
+        uniFlyCanvas.style.transition = '';
+        drawPlayer();
+      }
+
+      function positionUniFlyAt(r, c){
+        uniFlyCanvas.style.left = (PAD + c*(CELL+GAP) + (CELL-uniFlyCanvas.width)/2) + 'px';
+        uniFlyCanvas.style.top  = (PAD + r*(CELL+GAP) + (CELL-uniFlyCanvas.height)/2) + 'px';
+      }
+
+      function screenshake(d){
+        document.body.classList.add('shake');
+        setTimeout(()=> document.body.classList.remove('shake'), d);
+      }
+      
+      function triggerIntroFlyOut(){
+        introDone = true;
+        launchGame();
+        screenshake(400);
+        uniFlyCanvas.style.left = UNI_DOCK_LEFT + 'px';
+        uniFlyCanvas.style.top = UNI_DOCK_TOP + 'px';
+        setTimeout(()=>{
+          uniFlyCanvas.style.opacity = '0';
+          unicornWrap.style.display = '';
+          drawUnicorn();
+        }, 650);
+      }
+
+      function playOutro(){
+        unicornWrap.style.display = 'none';
+        uniFlyCanvas.style.transition = 'none';
+        uniFlyCanvas.style.left = UNI_DOCK_LEFT + 'px';
+        uniFlyCanvas.style.top = UNI_DOCK_TOP + 'px';
+        uniFlyCanvas.style.opacity = '1';
+        void uniFlyCanvas.offsetWidth;
+        uniFlyCanvas.style.transition = '';
+        positionUniFlyAt(1, 2);
+        player.r = 2; player.c = 2; player.facingLeft = false;
+        drawPlayer();
+      }
+
+      function drawUnicorn(){
+        if (player.c > 2) drawSprite(unicornCanvas, UNI_BMP, UNI_PAL, UNI_PX, true);
+        else if (player.c <= 1) drawSprite(unicornCanvas, UNI_BMP, UNI_PAL, UNI_PX, false);
       }
 
       function drawPlayer(){
         const left = PAD + player.c*(CELL+GAP) + (CELL-playerCanvas.width)/2;
         const top  = PAD + player.r*(CELL+GAP) + (CELL-playerCanvas.height)/2;
+        drawSprite(playerCanvas, GIRL_BMP, GIRL_PAL, PLAYER_PX, player.facingLeft)
         playerCanvas.style.left = left+'px';
         playerCanvas.style.top = top+'px';
+        drawUnicorn();
       }
 
       function keyToPattern(p){
@@ -205,11 +297,9 @@
         else if(p.t==='area'){ const rows=toArr(p.r); const cols=toArr(p.c); rows.forEach(r=>{ cols.forEach(c=>{ list.push([r, c]); })}); }
         else if(p.t==='corners'){ list.push([0,0],[0,4],[4,0],[4,4]); }
         else if(p.t==='center'){ list.push([2,2]); }
-        else if(p.t==='checker'){
-          for(let r=0;r<N;r++) for(let c=0;c<N;c++){
-            if(((r+c)%2===0) === !!p.odd) list.push([r,c]);
-          }
-        }
+        else if(p.t==='checker'){ for(let r=0;r<N;r++) for(let c=0;c<N;c++){ if(((r+c)%2===0) === !!p.odd) list.push([r,c]); }}
+        else if (p.t=='dots'){ const cells=toArr(p.i); for(let c=0;c<cells.length;c++){ list.push([ Math.floor(cells[c]/N), Math.floor(cells[c]%N) ]) } }
+        else if (p.t=='random'){ list.push(...keyToPattern({t:"dots", i:Array.from({ length: 25 }, (_, i) => i).sort(() => Math.random() - 0.5).slice(0, p.i)})); }
         return list;
       }
 
@@ -300,6 +390,18 @@
         }
       }
 
+      function checkLastSecondDodges(){
+        const now = elapsedSeconds();
+        pending.forEach(p=>{
+          if(p.lastSecond) return;
+          const remaining = p.fireTime - now;
+          const window = Math.min(1.0, (p.warnDuration || 1) * 0.2);
+          if(remaining > 0 && remaining <= window){
+            if(p.cells.some(([r,c])=> player.r===r && player.c===c)) p.lastSecond = true;
+          }
+        });
+      }
+
       function tick(){
         if(!running) return;
         const elapsed = elapsedSeconds();
@@ -313,17 +415,14 @@
         const bpm = stage.bpm;
         stageNumEl.textContent = stageIdx+1;
 
+        checkLastSecondDodges();
+
         let firingGroups = [];
         pending = pending.filter(p=>{
           const remaining = p.fireTime - elapsed;
-
-          if(remaining <= 1.0 && remaining > 0){
-            if(p.cells.some(([r,c])=> player.r===r && player.c===c)) p.lastSecond = true;
-          }
-
-          if(remaining <= 0.05){ 
-            firingGroups.push(p); 
-            return false; 
+          if(remaining <= 0.05){
+            firingGroups.push(p);
+            return false;
           }
           return true;
         });
@@ -340,7 +439,10 @@
             cell.classList.add('fire');
             if(player.r===r && player.c===c) groupHit = true;
           });
-          if(groupHit){ hit = true; }
+          if(groupHit){
+            screenshake(200);
+            hit = true;
+          }
           else {
             score += 10;
             if(group.lastSecond) { score += CLUTCH_BONUS; clutch = true; }
@@ -370,13 +472,14 @@
           hearts.forEach((h,i)=> h.classList.toggle('lost', i>=lives));
           if(lives<=0){ endGame(false); return; }
         } else if(clutch){
-          flashMsg('+' + CLUTCH_BONUS + ' CLUTCH DODGE!', 'clutch', 'Arrow keys / WASD to move. Dodge the rainbow beams!');
+          flashMsg('+' + CLUTCH_BONUS + ' CLUTCH DODGE!', 'clutch', DEFAULT_MSG);
         }
 
         const warnDurationSeconds = WARN_BEATS * (60 / bpm);
         pending.push({
           cells: keyToPattern(pattern), 
           fireTime: elapsed + warnDurationSeconds, 
+          warnDuration: warnDurationSeconds,
           lastSecond: false
         });
 
@@ -391,6 +494,7 @@
       function updateClock(){
         if(!running) return;
         timeValEl.textContent = Math.min(elapsedSeconds(), GAME_DURATION_SECONDS).toFixed(1);
+        checkLastSecondDodges();
         updateCellVisuals();
       }
 
@@ -404,22 +508,63 @@
         msgEl.textContent = label + ' — Score: ' + score + '  Time: ' + timeValEl.textContent + 's';
         restartBtn.style.display = 'inline-block';
         bgm.pause();
+        if(survived) playOutro();
+      }
+
+      function resetGame(){
+        clearTimeout(timer);
+        clearInterval(clockTimer);
+        pending = [];
+        score = 0;
+        lives = 3;
+        currentStageIdx = -1;
+        stageBeatCounter = 0;
+        running = false;
+        scoreEl.textContent = '0';
+        timeValEl.textContent = '0.0';
+        stageNumEl.textContent = '1';
+        msgEl.classList.remove('clutch');
+        msgEl.textContent = DEFAULT_MSG;
+        restartBtn.style.display = 'none';
+        cells.forEach(row=>row.forEach(cell=>{
+          cell.classList.remove('fire','warn');
+          cell.style.background = '';
+          cell.querySelector('.cd').textContent = '';
+        }));
+        heartsEl.innerHTML = '';
+        for(let i=0;i<3;i++){
+          const h = document.createElement('span');
+          h.className = 'heart';
+          heartsEl.appendChild(h);
+        }
+        setupGameplay();
+        bgm.pause();
+        bgm.currentTime = 0;
+        launchGame();
       }
 
       function move(dr, dc){
-        if(!running) return;
+        if(!gameStarted) return;
         const nr = player.r + dr, nc = player.c + dc;
         if(nr<0||nr>=N||nc<0||nc>=N) return;
         player.r = nr; player.c = nc;
+        if (dc < 0) player.facingLeft = true;
+        if (dc > 0) player.facingLeft = false;
         drawPlayer();
+        if(!introDone && [0,1].includes(player.r) && [1,2,3].includes(player.c)){ triggerIntroFlyOut(); }
       }
 
-      async function launchGame(){
+      function dismissOverlay(){
         if(gameStarted) return;
         gameStarted = true;
-        running = true;
         initAudio();
         startOverlay.style.display = 'none';
+      }
+
+      function launchGame(){
+        if(running) return;
+        running = true;
+        initAudio();
         startTime = Date.now();
         if(MUSIC_URL){ bgm.play().catch(e=>console.error("Audio play failed:", e)); }
         clockTimer = setInterval(updateClock, 100);
@@ -428,11 +573,17 @@
 
       window.addEventListener('keydown', e=>{
         const k = e.key.toLowerCase();
+        if(k==='enter'){
+          e.preventDefault();
+          if(!running) resetGame();
+          return;
+        }
         if(!gameStarted){
           if(['arrowup','w','arrowdown','s','arrowleft','a','arrowright','d',' '].includes(k)){
-            launchGame();
+            dismissOverlay();
+          } else {
+            return;
           }
-          return;
         }
         if(k==='arrowup'||k==='w') move(-1,0);
         else if(k==='arrowdown'||k==='s') move(1,0);
@@ -442,8 +593,8 @@
         e.preventDefault();
       });
 
-      startBtn.addEventListener('click', launchGame);
-      restartBtn.addEventListener('click', ()=> location.reload());
+      startBtn.addEventListener('click', dismissOverlay);
+      restartBtn.addEventListener('click', resetGame);
 
       if(MUSIC_URL){ bgm.addEventListener('ended', ()=>{ if(running) endGame(true); }); }
 
