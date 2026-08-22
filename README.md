@@ -50,6 +50,7 @@ Pattern types you can use inside a stage's `patterns` array:
   { t: "area", r: [1,2], c: [2] }   // from here to there
   { t: "corners" }                  // all four corners
   { t: "center" }                   // just the center cell
+  { t: "pos" }                      // player's position
   { t: "checker", odd: true/false } // checkerboard cells
 ```
 

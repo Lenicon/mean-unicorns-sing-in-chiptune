@@ -128,7 +128,7 @@
     <audio id="bgm" loop></audio>
 
     <script>
-      const GAME_DURATION_SECONDS = 207;
+      const GAME_DURATION_SECONDS = 200;
       const WARN_BEATS = 1;
       const MUSIC_URL = './hexxel-tampered-532260.mp3';
       const CLUTCH_BONUS = 15;
@@ -326,8 +326,9 @@
         else if(p.t==='corners'){ list.push([0,0],[0,4],[4,0],[4,4]); }
         else if(p.t==='center'){ list.push([2,2]); }
         else if(p.t==='checker'){ for(let r=0;r<N;r++) for(let c=0;c<N;c++){ if(((r+c)%2===0) === !!p.odd) list.push([r,c]); }}
-        else if (p.t=='dots'){ const cells=toArr(p.i); for(let c=0;c<cells.length;c++){ list.push([ Math.floor(cells[c]/N), Math.floor(cells[c]%N) ]) } }
-        else if (p.t=='random'){ list.push(...keyToPattern({t:"dots", i:Array.from({ length: 25 }, (_, i) => i).sort(() => Math.random() - 0.5).slice(0, p.i)})); }
+        else if(p.t==='dots'){ const cells=toArr(p.i); for(let c=0;c<cells.length;c++){ list.push([ Math.floor(cells[c]/N), Math.floor(cells[c]%N) ]) } }
+        else if(p.t==='random'){ list.push(...keyToPattern({t:"dots", i:Array.from({ length: 25 }, (_, i) => i).sort(() => Math.random() - 0.5).slice(0, p.i)})); }
+        else if(p.t==='pos'){ list.push([player.r, player.c]); }
         return list;
       }
 
