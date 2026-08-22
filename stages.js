@@ -174,4 +174,31 @@ const STAGES = [
         { "t": "col", "i": 4 },
     ]
   },
+  {
+    "start": 104,
+    "bpm": 65,
+    "patterns": [
+        { "t": "checker", "odd": true },
+        { "t": "checker", "odd": false },
+    ]
+  },
+  {
+    "start": 107,
+    "bpm": 130,
+    "patterns": [
+      { "t": "col", "i": 4 },
+      { "t": "col", "i": 3 },
+      { "t": "col", "i": 2 },
+      { "t": "col", "i": 1 },
+      { "t": "col", "i": 0 },
+    ]
+  },
+  {
+    "start": 112,
+    "bpm": 65,
+    "patterns": [
+        { "t": "checker", "odd": true },
+        { "t": "checker", "odd": false },
+    ]
+  },
 ];

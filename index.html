@@ -25,6 +25,19 @@
         font-size:15px;margin:10px 0;display:flex;gap:18px;background:#1a1030;
         border:3px solid #000;box-shadow:4px 4px 0 #000;padding:6px 14px;text-shadow:2px 2px 0 #000
       }
+      #floatScore{ position: relative; display: inline-block; }
+      @keyframes floatScore {
+        0% { opacity: 1; transform: translateY(0) scale(1); }
+        100% { opacity: 0; transform: translateY(-28px) scale(1.25); }
+      }
+      .score-pop{
+        position: absolute; right: 0; top: -12px; color: #ff4dff; font-size: 15px;
+        text-shadow: 2px 2px 0 #000; pointer-events: none; animation: floatScore 0.8s ease-out forwards;
+        white-space: nowrap; z-index: 10;
+      }
+      .score-pop.clutch-pop {
+        color: #3dff5c; font-size: 17px;
+      }
       #stageTag{font-size:14px;opacity:.8}
       #unicornWrap{margin-bottom:8px;transition:transform .12s}
       #unicornWrap.blast{transform:scale(1.25) rotate(-6deg)}
@@ -98,18 +111,18 @@
     <div id="startOverlay">
       <div style="font-size:20px; text-shadow:2px 2px 0 #000; margin-bottom:10px;">
         <span class="I">M</span>ean <span class="I">U</span>nicorns <span class="I">S</span>ing <span class="I">I</span>n <span class="I">C</span>hiptune by Len.icon</div>
-      <button id="startBtn">CLICK TO START</button>
+      <button id="startBtn">RIDE THE UNICORN</button>
     </div>
 
     <div id="hud">
-      <div>Score: <span id="score">0</span></div>
+      <div id="floatScore">Score: <span id="score">0</span></div>
       <div>Time: <span id="timeVal">0.0</span>s</div>
       <div id="hearts"></div>
       <div id="stageTag">Stage <span id="stageNum">1</span></div>
     </div>
     <div id="unicornWrap"><canvas id="unicornCanvas"></canvas></div>
     <div id="grid"></div>
-    <div id="msg">Arrow keys / WASD to move.</div>
+    <div id="msg">Arrow keys / WASD to move</div>
     <button id="restart">ENTER to Restart</button>
 
     <audio id="bgm" loop></audio>
@@ -120,8 +133,8 @@
       const MUSIC_URL = './hexxel-tampered-532260.mp3';
       const CLUTCH_BONUS = 15;
 
-      const GIRL_BMP = ["...KKK..","...BSS..","..BBSS..","..BBKB..","...KKK..","..KKKKK.","...S.S.."];
-      const GIRL_PAL = {K:'#d77bba',S:'#ffdebf',B:'#fbc036'};
+      const GIRL_BMP = ["...BBB..","...BSS..","..BBSSB.","..BBKBB.","...KKK..","..KKKKK.","...F.F.."];
+      const GIRL_PAL = {K:'#f3be00',S:'#ffe5cc',B:'#8f563b', F:'#ac3232'};
       const UNI_BMP = ["H........","HH...R..",".HPP.OO.",".SSP..YY",".SSPPCGG","..SSSPC.","..SSSS..","..S..S.."];
       const UNI_PAL = {H:"#f5d151",P:"#d77bba",S:"#ffe1f6",R:'#ff004d',O:'#ff9d00',Y:'#fff700',G:'#3dff5c',C:'#00e5ff'};
 
@@ -145,6 +158,7 @@
       const UNI_DOCK_LEFT = (GRID_W - UNI_BMP[0].length*UNI_PX) / 2;
       const UNI_DOCK_TOP = -60;
 
+      const hud = document.getElementById('hud');
       const gridEl = document.getElementById('grid');
       const scoreEl = document.getElementById('score');
       const timeValEl = document.getElementById('timeVal');
@@ -157,7 +171,7 @@
       const startBtn = document.getElementById('startBtn');
       const bgm = document.getElementById('bgm');
       const unicornCanvas = document.getElementById('unicornCanvas');
-      const DEFAULT_MSG = 'Arrow keys / WASD to move.';
+      const DEFAULT_MSG = 'Arrow keys / WASD to move';
 
       if (MUSIC_URL) { bgm.src = MUSIC_URL; }
 
@@ -177,6 +191,18 @@
       let startTime = 0;
       let currentStageIdx = -1;
       let stageBeatCounter = 0;
+      let canMove = true;
+
+      function popScore(pts, isClutch = false) {
+        const floatScore = document.getElementById('floatScore');
+        if (!floatScore) return;
+        const pop = document.createElement('div');
+        pop.className = 'score-pop' + (isClutch ? ' clutch-pop' : '');
+        pop.textContent = '+' + pts;
+        if (isClutch) pop.style.marginRight = (Math.random() * 20 - 10) + 'px';
+        floatScore.appendChild(pop);
+        setTimeout(() => pop.remove(), 800);
+      }
 
       function buildGrid(){
         gridEl.innerHTML = '';
@@ -215,6 +241,7 @@
       }
 
       function setupIntro(){
+        hud.style.display = 'none';
         introDone = false;
         player = {r:4, c:2, facingLeft:false};
         unicornWrap.style.display = 'none';
@@ -258,6 +285,7 @@
           uniFlyCanvas.style.opacity = '0';
           unicornWrap.style.display = '';
           drawUnicorn();
+          hud.style.display = 'flex';
         }, 650);
       }
 
@@ -444,8 +472,13 @@
             hit = true;
           }
           else {
-            score += 10;
-            if(group.lastSecond) { score += CLUTCH_BONUS; clutch = true; }
+            const pts = (10 + (5 * (lives-1))); 
+            score += pts;
+            popScore(pts);
+            if(group.lastSecond) { 
+              score += CLUTCH_BONUS; clutch = true;
+              setTimeout(() => popScore(CLUTCH_BONUS, true), 150);
+            }
           }
         });
 
@@ -499,6 +532,7 @@
       }
 
       function endGame(survived){
+        canMove = false;
         running = false;
         clearTimeout(timer);
         clearInterval(clockTimer);
@@ -512,6 +546,7 @@
       }
 
       function resetGame(){
+        canMove = true;
         clearTimeout(timer);
         clearInterval(clockTimer);
         pending = [];
@@ -544,7 +579,7 @@
       }
 
       function move(dr, dc){
-        if(!gameStarted) return;
+        if(!gameStarted || !canMove) return;
         const nr = player.r + dr, nc = player.c + dc;
         if(nr<0||nr>=N||nc<0||nc>=N) return;
         player.r = nr; player.c = nc;
