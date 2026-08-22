@@ -157,7 +157,21 @@ const STAGES = [
     "start": 95,
     "bpm": 130,
     "patterns": [
-        { "t": "random", "i": 5 },
+        { "t": "random", "i": 1 },
+        { "t": "random", "i": 1 },
+        { "t": "random", "i": 1 },
+        { "t": "cross", "r": [0,4], "c":[0,4] },
+    ]
+  },
+  {
+    "start": 99,
+    "bpm": 130,
+    "patterns": [
+        { "t": "col", "i": 0 },
+        { "t": "col", "i": 1 },
+        { "t": "col", "i": 2 },
+        { "t": "col", "i": 3 },
+        { "t": "col", "i": 4 },
     ]
   },
 ];

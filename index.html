@@ -575,7 +575,7 @@
         const k = e.key.toLowerCase();
         if(k==='enter'){
           e.preventDefault();
-          if(!running) resetGame();
+          if(!running && gameStarted) resetGame();
           return;
         }
         if(!gameStarted){
