@@ -10,7 +10,7 @@ A rhythm game where you dodge a mean unicorn's rainbow attacks for **js13kGames 
 
 ## HOW TO PLAY
 - Open index.html in any browser
-- Move with arrow keys or WASD (there's diagonals).
+- Move with arrow keys or WASD.
 - Squares that are about to be hit flash yellow with a countdown
   number on them (2, then 1). When the number runs out, that
   pattern turns into a rainbow laser for one beat. Get off those
