@@ -160,7 +160,7 @@ const STAGES = [
       { "t": "pos" },
       { "t": "pos" },
       { "t": "pos" },
-      { "t": "cross", "r": [0,4], "c":[0,4] },
+      { "t": "checker", "odd":(Math.random() < 0.5) },
     ]
   },
   {
@@ -197,8 +197,8 @@ const STAGES = [
     "start": 112,
     "bpm": 65,
     "patterns": [
-      { "t": "checker", "odd": true },
       { "t": "checker", "odd": false },
+      { "t": "checker", "odd": true },
     ]
   },
   {
@@ -218,7 +218,7 @@ const STAGES = [
     ]
   },
   {
-    "start": 122,
+    "start": 123,
     "bpm": 130,
     "patterns": [
       { "t": "area", "r": [1, 2, 3], "c": [1, 2, 3] },
@@ -315,21 +315,48 @@ const STAGES = [
   },
   {
     "start": 178,
-    "bpm": 195,
+    "bpm": 65,
+    "patterns": [
+      { "t": "pos" },
+    ]
+  },
+  {
+    "start": 179,
+    "bpm": 130,
     "patterns": [
       { "t": "pos" },
       { "t": "pos" },
       { "t": "pos" },
       { "t": "pos" },
       { "t": "pos" },
-      { "t": "pos" },
-      { "t": "random" },
+      { "t": "random", "i":3 },
     ]
   },
   {
-    "start": 199.5,
+    "start": 187,
+    "bpm": 32.5,
+    "patterns": [
+      { "t": "random", "i":24 },
+    ]
+  },
+  {
+    "start": 192,
     "bpm": 65,
-    "patterns": []
+    "patterns": [
+      { "t": "pos" }, 
+      { "t": "pos" },
+      { "t": "pos" },
+      { "t": "pos" },
+      { "t": "pos" },
+      { "t": "cross", "r":[0,1,3,4], "c":[0,1,3,4] },
+    ]
+  },
+  {
+    "start": 198,
+    "bpm": 16.25,
+    "patterns": [
+      { "t": "area", "r":[0,1,2,3,4], "c":[0,1,2,3,4] }
+    ]
   },
   
 ];

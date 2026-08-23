@@ -125,7 +125,7 @@
     <div id="msg">Arrow keys / WASD to move</div>
     <button id="restart">ENTER to Restart</button>
 
-    <audio id="bgm" loop></audio>
+    <audio id="bgm"></audio>
 
     <script>
       const GAME_DURATION_SECONDS = 200;
@@ -439,11 +439,13 @@
         const stageIdx = stageForTime(elapsed);
         if(stageIdx !== currentStageIdx){ currentStageIdx = stageIdx; stageBeatCounter = 0; }
         const stage = STAGES[stageIdx];
-        const pattern = stage.patterns[stageBeatCounter % stage.patterns.length];
-        stageBeatCounter++;
         const bpm = stage.bpm;
         stageNumEl.textContent = stageIdx+1;
+        
+        if (!stage.patterns || stage.patterns.length === 0) { clearCells(); timer = setTimeout(tick, 60000 / bpm); return; }
 
+        const pattern = stage.patterns[stageBeatCounter % stage.patterns.length];
+        stageBeatCounter++;
         checkLastSecondDodges();
 
         let firingGroups = [];
@@ -532,7 +534,16 @@
         updateCellVisuals();
       }
 
+      function clearCells(){
+        cells.forEach(row=>row.forEach(cell=>{
+          cell.classList.remove('fire','warn');
+          cell.style.background = '';
+          cell.querySelector('.cd').textContent = '';
+        }));
+      }
+
       function endGame(survived){
+        clearCells();
         canMove = false;
         running = false;
         clearTimeout(timer);
@@ -542,8 +553,8 @@
         const label = survived ? 'You Survived!' : 'Game Over';
         msgEl.textContent = label + ' — Score: ' + score + '  Time: ' + timeValEl.textContent + 's';
         restartBtn.style.display = 'inline-block';
-        bgm.pause();
         if(survived) playOutro();
+        else bgm.pause();
       }
 
       function resetGame(){
@@ -562,11 +573,7 @@
         msgEl.classList.remove('clutch');
         msgEl.textContent = DEFAULT_MSG;
         restartBtn.style.display = 'none';
-        cells.forEach(row=>row.forEach(cell=>{
-          cell.classList.remove('fire','warn');
-          cell.style.background = '';
-          cell.querySelector('.cd').textContent = '';
-        }));
+        clearCells();
         heartsEl.innerHTML = '';
         for(let i=0;i<3;i++){
           const h = document.createElement('span');
