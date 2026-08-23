@@ -56,13 +56,13 @@ Pattern types you can use inside a stage's `patterns` array:
 
 **Grid coordinates:** `r` (row) and `c` (column) both go from 0 (top/left) to 4 (bottom/right).
 
+
 ## HOW TO ADD YOUR OWN MUSIC
 
 1. Drop an mp3 or ogg file in the same folder as `index.html`.
 2. Set `MUSIC_URL` in `index.html` to that filename, e.g.: `const MUSIC_URL = 'music.mp3';`
 3. Set each stage's `bpm` in `stages.js` to match the actual tempo of that section of your song.
 
-I also created a small BEEP sound with NO sound file, cool right?
 
 ## THE PIXEL ART
 

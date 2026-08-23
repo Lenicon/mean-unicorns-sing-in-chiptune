@@ -130,8 +130,12 @@
     <script>
       const GAME_DURATION_SECONDS = 200;
       const WARN_BEATS = 1;
-      const MUSIC_URL = './hexxel-tampered-532260.mp3';
       const CLUTCH_BONUS = 15;
+      const MUSIC_URL = './hexxel-tampered-532260.mp3';
+
+      const PEW_URL = './pew.mp3';
+      const pewAudio = new Audio(PEW_URL);
+      function pew(){ pewAudio.cloneNode().play(); }
 
       const GIRL_BMP = ["...BBB..","...BSS..","..BBSSB.","..BBKBB.","...KKK..","..KKKKK.","...F.F.."];
       const GIRL_PAL = {K:'#f3be00',S:'#ffe5cc',B:'#8f563b', F:'#ac3232'};
@@ -341,22 +345,6 @@
         }
       }
 
-      function beep(freq, dur, vol){
-        try{
-          initAudio();
-          if (audioCtx.state !== 'running') return;
-          const o = audioCtx.createOscillator();
-          const g = audioCtx.createGain();
-          o.frequency.value = freq;
-          o.type = 'square';
-          g.gain.value = vol;
-          o.connect(g); g.connect(audioCtx.destination);
-          o.start();
-          g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
-          o.stop(audioCtx.currentTime + dur);
-        }catch(e){}
-      }
-
       function flashMsg(text, cls, revertTo){
         msgEl.textContent = text;
         if(cls) msgEl.classList.add(cls);
@@ -486,7 +474,7 @@
         });
 
         if(firingGroups.length){
-          beep(140, .15, .22);
+          pew();
           unicornWrap.classList.add('blast');
           setTimeout(()=>unicornWrap.classList.remove('blast'), 150);
           const allFiring = firingGroups.flatMap(g=>g.cells);
@@ -519,8 +507,6 @@
           lastSecond: false
         });
 
-        beep(440, .06, .16);
-
         updateCellVisuals();
 
         drawPlayer();
@@ -550,7 +536,7 @@
         clearInterval(clockTimer);
         timeValEl.textContent = Math.min(elapsedSeconds(), GAME_DURATION_SECONDS).toFixed(1);
         msgEl.classList.remove('clutch');
-        const label = survived ? 'You Survived!' : 'Game Over';
+        const label = survived ? 'Unicorn Likes You!' : 'Game Over';
         msgEl.textContent = label + ' — Score: ' + score + '  Time: ' + timeValEl.textContent + 's';
         restartBtn.style.display = 'inline-block';
         if(survived) playOutro();
