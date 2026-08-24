@@ -1,4 +1,4 @@
-SONGS = [songOne, songTwo];
+SONGS = [songOne, songTwo, songThree, songFour, songFive];
 currentSongIdx = 0;
 setSong = (idx) => {
     currentSongIdx = (idx + SONGS.length) % SONGS.length;
