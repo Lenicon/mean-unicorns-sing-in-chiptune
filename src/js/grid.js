@@ -34,6 +34,7 @@ function buildGrid() {
 }
 function setupIntro() {
     hud.style.display = 'none';
+    canMove = true;
     introDone = false;
     player = { r: 4, c: 2, facingLeft: false };
     unicornWrap.style.display = 'none';

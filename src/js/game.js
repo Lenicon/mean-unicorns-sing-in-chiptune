@@ -1,4 +1,4 @@
-let STAGES = getSongPattern();
+STAGES = getSongPattern();
 
 function elapsedSeconds() {
     return (Date.now() - startTime) / 1000;
@@ -34,7 +34,6 @@ function tick() {
     if (stageIdx !== currentStageIdx) { currentStageIdx = stageIdx; stageBeatCounter = 0; }
     const stage = STAGES[stageIdx];
     const bpm = stage.bpm;
-    stageNumEl.textContent = stageIdx + 1;
     if (!stage.patterns || stage.patterns.length === 0) { clearCells(); timer = setTimeout(tick, 60000 / bpm); return; }
     const pattern = stage.patterns[stageBeatCounter % stage.patterns.length];
     stageBeatCounter++;
@@ -134,11 +133,13 @@ function endGame(survived) {
     msgEl.classList.remove('clutch');
     msgEl.textContent = survived ? 'Unicorn Likes You!' : 'Game Over';
     restartBtn.style.display = 'inline-block';
+    menuBtn.style.display = 'inline-block';
     stopMusic();
     if (survived) playOutro();
-    else { playerCanvas.style.transform = 'rotate(-90deg)'; }
+    else { playerCanvas.style.transform = 'rotate(-90deg)'; stopAllAudio() }
 }
-function resetGame() {
+function resetAll(){
+    hud.style.display = 'flex';
     canMove = true;
     clearTimeout(timer);
     clearInterval(clockTimer);
@@ -150,10 +151,10 @@ function resetGame() {
     running = false;
     scoreEl.textContent = '0';
     timeValEl.textContent = '0.0';
-    stageNumEl.textContent = '1';
     msgEl.classList.remove('clutch');
     msgEl.textContent = DEFAULT_MSG;
     restartBtn.style.display = 'none';
+    menuBtn.style.display = 'none';
     clearCells();
     heartsEl.innerHTML = '';
     for (let i = 0; i < 3; i++) {
@@ -161,20 +162,12 @@ function resetGame() {
         h.className = 'heart';
         heartsEl.appendChild(h);
     }
+}
+function resetGame() {
+    resetAll();
     setupGameplay();
-    stopMusic();
+    stopAllAudio();
     launchGame();
-}
-function hideMenu() {
-    if (gameStarted) return;
-    gameStarted = true;
-    initAudio();
-    startOverlay.style.display = 'none';
-}
-function showMenu(){
-    if (!gameStarted) return;
-    gameStarted = false;
-    startOverlay.style.display = 'none';
 }
 function launchGame() {
     if (running) return;
@@ -185,6 +178,30 @@ function launchGame() {
     clockTimer = setInterval(updateClock, 100);
     timer = setTimeout(tick, 60000 / STAGES[0].bpm);
 }
+function hideMenu() {
+    if (gameStarted) return;
+    setSong(currentSongIdx);
+    hudSongTitle.textContent = getSongName();
+    initAudio();
+    resetAll();
+    setupIntro();
+    gameStarted = true;
+    startOverlay.style.display = 'none';
+}
+function returnToMenu() {
+    running = false;
+    gameStarted = false;
+    canMove = false;
+    clearTimeout(timer);
+    clearInterval(clockTimer);
+    stopAllAudio();
+    clearCells();
+    setupIntro();
+    startOverlay.style.display = 'flex';
+    restartBtn.style.display = 'none';
+    menuBtn.style.display = 'none';
+}
 startBtn.addEventListener('click', hideMenu);
 restartBtn.addEventListener('click', resetGame);
+menuBtn.addEventListener('click', returnToMenu);
 buildGrid();

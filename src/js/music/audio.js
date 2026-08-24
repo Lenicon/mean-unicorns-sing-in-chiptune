@@ -1,5 +1,3 @@
-let SECTIONS = getSongMusic();
-
 let ac;
 const ac_ = () => ac || (ac = new (window.AudioContext || window.webkitAudioContext)());
 let noiseBuf;
@@ -187,6 +185,22 @@ function startMusic() {
 function stopMusic() {
     musicOn = false;
     clearTimeout(musicTimer);
+}
+
+function stopAllAudio() {
+    stopMusic();
+    if (riserOsc) {
+        try { riserOsc.stop(); riserOsc.disconnect(); } catch (e) {}
+        riserOsc = null;
+    }
+    if (comp) {
+        try { comp.disconnect(); } catch (e) {}
+        comp = null;
+    }
+    if (cleanGain) {
+        try { cleanGain.disconnect(); } catch (e) {}
+        cleanGain = null;
+    }
 }
 
 function initAudio() {

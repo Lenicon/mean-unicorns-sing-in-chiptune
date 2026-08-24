@@ -1,10 +1,41 @@
-const SONGS = [songOne];
+SONGS = [songOne, songTwo];
 currentSongIdx = 0;
-const setSong = (idx) => currentSongIdx = idx;
-const getSong = () => SONGS[currentSongIdx];
-const getSongName = () => getSong()[0];
-const getSongPattern = () => getSong()[1];
-const getSongMusic = () => getSong()[2];
+setSong = (idx) => {
+    currentSongIdx = (idx + SONGS.length) % SONGS.length;
+    if (typeof STAGES !== 'undefined' && typeof SECTIONS !== 'undefined') {
+        STAGES = getSongPattern();
+        SECTIONS = getSongMusic();
+    }
+    updateSongDisplay();
+};
+
+nextSong = () => setSong(currentSongIdx + 1);
+prevSong = () => setSong(currentSongIdx - 1);
+
+getSong = () => SONGS[currentSongIdx];
+getSongName = (idx = currentSongIdx) => SONGS[idx][0];
+getSongPattern = () => getSong()[1];
+getSongMusic = () => getSong()[2];
+
+function updateSongDisplay() {
+    const songTitle = document.getElementById('songTitle');
+    if (songTitle && SONGS[currentSongIdx]) {
+        songTitle.textContent = getSongName();
+    }
+}
+
+function initSongPicker() {
+    const prevBtn = document.getElementById('prevSongBtn');
+    const nextBtn = document.getElementById('nextSongBtn');
+
+    if (prevBtn) prevBtn.addEventListener('click', prevSong);
+    if (nextBtn) nextBtn.addEventListener('click', nextSong);
+
+    updateSongDisplay();
+}
+
+window.addEventListener('DOMContentLoaded', initSongPicker);
+
 function keyToPattern(p) {
     const list = [];
     const toArr = (val) => Array.isArray(val) ? val : (val !== undefined ? [val] : []);
