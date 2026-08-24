@@ -1,0 +1,23 @@
+{
+  "name": "mean-unicorns-sing-in-chiptune",
+  "version": "1.0.0",
+  "description": "A rhythm-like game where you dodge rainbow. Survive until the end to please the unicorn!",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lenicon/mean-unicorns-sing-in-chiptune.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Lenicon/mean-unicorns-sing-in-chiptune/issues"
+  },
+  "homepage": "https://github.com/Lenicon/mean-unicorns-sing-in-chiptune#readme",
+  "devDependencies": {
+    "roadroller": "^2.1.0",
+    "terser": "^5.50.0"
+  }
+}

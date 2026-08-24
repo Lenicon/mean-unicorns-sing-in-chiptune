@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mean Unicorns Sing In Chiptune by Len.icon</title>
+    <link rel="stylesheet" href="style.css"></link>
+    
+</head>
+
+<body>
+    <div id="startOverlay">
+        <div id="menuPanel">
+            <div id="menuTitle"><span class="I">M</span>ean <span class="I">U</span>nicorns <span class="I">S</span>ing
+                <span class="I">I</span>n <span class="I">C</span>hiptune
+                <div id="menuBy">by Len.icon</div>
+            </div>
+            <div class="menu-divider"></div>
+            <div id="menuTagline">For js13kGame Jam</div>
+            <div id="menuControls">
+                <div><span>Move</span><span class="key">WASD / Arrows</span></div>
+                <div><span>Restart</span><span class="key">Enter</span></div>
+                <div><span>Lives</span><span class="key">3 Hearts</span></div>
+            </div><button id="startBtn">Ride The Unicorn</button>
+        </div>
+    </div>
+    <div id="hud">
+        <div id="floatScore">Score: <span id="score">0</span></div>
+        <div>Time: <span id="timeVal">0.0</span>s</div>
+        <div id="hearts"></div>
+        <div id="stageTag">Stage <span id="stageNum">1</span></div>
+    </div>
+    <div id="unicornWrap"><canvas id="unicornCanvas"></canvas></div>
+    <div id="grid"></div>
+    <div id="msg">Arrow keys / WASD to move</div><button id="restart">ENTER to Restart</button>
+    
+    <script src="js/inputs/keyboard.js"></script>
+    <script src="js/sprites.js"></script>
+    <script src="js/const.js"></script>
+    <script src="js/music/songs/one.js"></script>
+    <script src="js/music/song.js"></script>
+    <script src="js/music/audio.js"></script>
+    <script src="js/game.js"></script>
+</body>
+
+</html>
