@@ -7,10 +7,16 @@ const JS_FILES = [
   'src/js/inputs/keyboard.js',
   'src/js/sprites.js',
   'src/js/const.js',
+
+  // MUSIC
   'src/js/music/songs/one.js',
+  
   'src/js/music/song.js',
   'src/js/music/audio.js',
-  'src/js/game.js'
+  'src/js/game.js',
+  'src/js/ui.js',
+  'src/js/grid.js',
+  'src/js/game.js',
 ];
 
 async function build() {

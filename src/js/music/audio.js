@@ -1,3 +1,5 @@
+let SECTIONS = getSongMusic();
+
 let ac;
 const ac_ = () => ac || (ac = new (window.AudioContext || window.webkitAudioContext)());
 let noiseBuf;
@@ -124,10 +126,11 @@ function startRiser(sec) {
     o.start(t); o.stop(t + sec.dur + 0.1);
     riserOsc = o;
 }
+
 function F(n) { return n == null ? 0 : 440 * Math.pow(2, n / 12); }
-// SECTIONS come from getMusic from song.js
-const SECTIONS = getSongMusic();
+
 let musicOn = false, musicTimer = null, stepIdx = 0, elapsedAtSection = 0, sectionIdx = 0, riserOsc = null, padStarted = false;
+
 function musicStep() {
     if (!musicOn) return;
     const c = ac_(), t = c.currentTime;
@@ -173,13 +176,24 @@ function musicStep() {
     }
     musicTimer = setTimeout(musicStep, STEP_DUR * 1000);
 }
+
 function startMusic() {
     if (musicOn) return;
     musicOn = true;
     stepIdx = 0; elapsedAtSection = 0; sectionIdx = 0; riserOsc = null; padStarted = false;
     musicStep();
 }
+
 function stopMusic() {
     musicOn = false;
     clearTimeout(musicTimer);
+}
+
+function initAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
 }
