@@ -10,6 +10,10 @@ const JS_FILES = [
 
   // MUSIC
   'src/js/music/songs/one.js',
+  'src/js/music/songs/two.js',
+  'src/js/music/songs/three.js',
+  'src/js/music/songs/four.js',
+  'src/js/music/songs/five.js',
   
   'src/js/music/song.js',
   'src/js/music/audio.js',
