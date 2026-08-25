@@ -1,7 +1,7 @@
 let ac;
 const ac_ = () => ac || (ac = new (window.AudioContext || window.webkitAudioContext)());
 let noiseBuf;
-const noiseBuf_ = () => {
+function noiseBuf_() {
     if (noiseBuf) return noiseBuf;
     const c = ac_(), len = c.sampleRate * 0.3;
     noiseBuf = c.createBuffer(1, len, c.sampleRate);
@@ -10,7 +10,7 @@ const noiseBuf_ = () => {
     return noiseBuf;
 }
 let comp, shaperNode, cleanGain;
-const ensureBus_ = () => {
+function ensureBus_() {
     if (comp) return;
     const c = ac_();
     comp = c.createDynamicsCompressor();
@@ -204,10 +204,6 @@ function stopAllAudio() {
 }
 
 function initAudio() {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
 }

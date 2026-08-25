@@ -1,21 +1,25 @@
 SONGS = [songOne, songTwo, songThree, songFour, songFive];
 currentSongIdx = 0;
-setSong = (idx) => {
+const setSong = (idx) => {
     currentSongIdx = (idx + SONGS.length) % SONGS.length;
     if (typeof STAGES !== 'undefined' && typeof SECTIONS !== 'undefined') {
         STAGES = getSongPattern();
         SECTIONS = getSongMusic();
+        GAME_DURATION_SECONDS = getSongTime();
+        BAR = 60 / getSongBPM() * 4;
     }
     updateSongDisplay();
 };
 
-nextSong = () => setSong(currentSongIdx + 1);
-prevSong = () => setSong(currentSongIdx - 1);
+const nextSong = () => setSong(currentSongIdx + 1);
+const prevSong = () => setSong(currentSongIdx - 1);
 
-getSong = () => SONGS[currentSongIdx];
-getSongName = (idx = currentSongIdx) => SONGS[idx][0];
-getSongPattern = () => getSong()[1];
-getSongMusic = () => getSong()[2];
+const getSong = () => SONGS[currentSongIdx];
+const getSongName = (idx = currentSongIdx) => SONGS[idx][0].name;
+const getSongTime = (idx = currentSongIdx) => SONGS[idx][0].time;
+const getSongBPM = (idx = currentSongIdx) => SONGS[idx][0].bpm;
+const getSongPattern = () => getSong()[1];
+const getSongMusic = () => getSong()[2];
 
 function updateSongDisplay() {
     const songTitle = document.getElementById('songTitle');
