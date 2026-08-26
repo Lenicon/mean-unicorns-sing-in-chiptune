@@ -1,6 +1,6 @@
 For a long long time now, it's tradition for unicorns to offer a ride to the purest of maidens... but these mean ones would rather have them dance!
 
-Prove you're worthy to ride them and dance to all FIVE songs!
+Prove you're worthy to ride them and dance to all SIX songs!
 
 
 ## Controls

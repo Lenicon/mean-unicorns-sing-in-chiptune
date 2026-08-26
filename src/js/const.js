@@ -1,4 +1,4 @@
-const WARN_BEATS = 1;
+let WARN_BEATS = 1;
 const CLUTCH_BONUS = 15;
 const N = 5, CELL = 60, GAP = 4, PAD = 6, PLAYER_PX = 6, UNI_PX = 5;
 const GRID_W = PAD * 2 + N * CELL + (N - 1) * GAP;

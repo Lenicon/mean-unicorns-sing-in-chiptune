@@ -1,5 +1,5 @@
 const songThree = [
-    { name: "Manic Pony Magic", time: 120, bpm: 200 },
+    { name: "Manic Pony Panic", time: 120, bpm: 200 },
     [
         {
             start: 0,

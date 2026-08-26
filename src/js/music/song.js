@@ -1,4 +1,4 @@
-SONGS = [songOne, songTwo, songThree, songFour, songFive, songSix];
+SONGS = [songTwo, songOne, songThree, songFour, songFive, songSix];
 currentSongIdx = 0;
 const setSong = (idx) => {
     currentSongIdx = (idx + SONGS.length) % SONGS.length;
@@ -8,6 +8,7 @@ const setSong = (idx) => {
         GAME_DURATION_SECONDS = getSongTime();
         BAR = (60 / getSongBPM()) * 4;
         STEP_DUR = BAR / 16;
+        WARN_BEATS = getSongWarn() ?? 1;
 
     }
     updateSongDisplay();
@@ -17,9 +18,10 @@ const nextSong = () => setSong(currentSongIdx + 1);
 const prevSong = () => setSong(currentSongIdx - 1);
 
 const getSong = () => SONGS[currentSongIdx];
-const getSongName = (idx = currentSongIdx) => SONGS[idx][0].name;
-const getSongTime = (idx = currentSongIdx) => SONGS[idx][0].time;
-const getSongBPM = (idx = currentSongIdx) => SONGS[idx][0].bpm;
+const getSongName = () => getSong()[0].name;
+const getSongTime = () => getSong()[0].time;
+const getSongBPM = () => getSong()[0].bpm;
+const getSongWarn = () => getSong()[0].warn;
 const getSongPattern = () => getSong()[1];
 const getSongMusic = () => getSong()[2];
 

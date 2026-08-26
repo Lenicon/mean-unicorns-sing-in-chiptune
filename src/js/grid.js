@@ -64,7 +64,6 @@ function positionUniFlyAt(r, c) {
 }
 function triggerIntroFlyOut() {
     introDone = true;
-    launchGame();
     screenshake(400);
     uniFlyCanvas.style.left = UNI_DOCK_LEFT + 'px';
     uniFlyCanvas.style.top = UNI_DOCK_TOP + 'px';
@@ -73,6 +72,7 @@ function triggerIntroFlyOut() {
         unicornWrap.style.display = '';
         drawUnicorn();
         hud.style.display = 'flex';
+        launchGame();
     }, 650);
 }
 function playOutro() {
