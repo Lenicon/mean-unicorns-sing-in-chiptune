@@ -14,6 +14,7 @@ const JS_FILES = [
   'src/js/music/songs/three.js',
   'src/js/music/songs/four.js',
   'src/js/music/songs/five.js',
+  'src/js/music/songs/six.js',
   
   'src/js/music/song.js',
   'src/js/music/audio.js',
@@ -31,7 +32,7 @@ async function build() {
   let rawJS = '';
   for (const file of JS_FILES) {
     if (!fs.existsSync(file)) {
-      console.error(`❌ File not found: ${file}`);
+      console.error(`File not found: ${file}`);
       return;
     }
     rawJS += fs.readFileSync(file, 'utf8') + '\n';

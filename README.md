@@ -12,15 +12,15 @@ The game is a 2D, retro, uncanny-looking rhythm game. Your goal is to survive th
 
 # Yap Session
 
-Holy moly, didn't know it was possible to create a 13kb game nowadays. I've been researching at past entries, especially **CLAWSTRIKE**.
+Holy moly, didn't know it was possible to create a 13kb game nowadays. I've been researching at past entries, especially **CLAWSTRIKE**. So thank you @remvst for making CLAWSTRIKE which enabled me to understand more about compression via reading your code! I almost lost my way thinking I can do this by just writing all of the code in a single index.html file!
 
-**Thank you @remvst for making CLAWSTRIKE**. I learned a lot from your code and decided to apply some of your practices to how I built mine. You're the reason why I got back up when I accidentally did a 6MB game, then had to strip everything away, relied on Claude.ai for everything and losing my way.
+My biggest and hardest challenge is making the music, I can barely make a song by myself, so much which especially made it worse when I had to code it myself instead of foraging from the internet!
 
-It was a total catastrophe I tell ya, check my commits, it's a mess. So, thanks again @remvst.
+Songs tend to be 6MB and no matter how much I compress them either it sounds really bad or the it barely reaches 5kb, farthest i could compress a 6MB music file is 300KB!! Not close!! I hate it!!! I even tried converting it into a Base64 string and creating a reader of sorts but I clearly had NO IDEA what I was doing, so I scrapped it!
 
-I now have a newfound love for pure HTML and Javascript. Since I've mainly worked on websites using React and NextJS.
+So if you think the music is a||ss||, I'M SORRY OKAY?!! I DID MY BEST!! PLEASE SPARE ME!!
 
-As well as an appreciation for each kilobbyte. A kilobyte is actually a lot of data. You're just fat. or uhh idk. 
+Anyways, if someone's even reading this, I know nobody will, that means you were intrigued enough by my work (or you're an admin who needs to check github pages for some reason). But anyways, **thanks for checking out my game!**
 
 
 # License

@@ -1,4 +1,4 @@
-SONGS = [songOne, songTwo, songThree, songFour, songFive];
+SONGS = [songOne, songTwo, songThree, songFour, songFive, songSix];
 currentSongIdx = 0;
 const setSong = (idx) => {
     currentSongIdx = (idx + SONGS.length) % SONGS.length;
@@ -6,7 +6,9 @@ const setSong = (idx) => {
         STAGES = getSongPattern();
         SECTIONS = getSongMusic();
         GAME_DURATION_SECONDS = getSongTime();
-        BAR = 60 / getSongBPM() * 4;
+        BAR = (60 / getSongBPM()) * 4;
+        STEP_DUR = BAR / 16;
+
     }
     updateSongDisplay();
 };

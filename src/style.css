@@ -5,6 +5,7 @@
     --green: #3dff5c;
     --cyan: #00e5ff;
     --purple: #7b2fff;
+    --pink: #ff9dfa;
     --sky-top: #5fb8ff;
     --sky-mid: #9edcff;
     --sky-low: #e3f7ff;
@@ -16,7 +17,6 @@
     --grass-blade: #268030;
     --cabinet: #1a1030;
     --cabinet2: #241a3d;
-    --pony-pink: #ff9dfa
 }
 
 * {
@@ -28,11 +28,11 @@
     font-smooth: never;
     text-rendering: optimizeSpeed;
     font-kerning: none;
-    font-variant-ligatures: none
+    font-variant-ligatures: none;
 }
 
 html {
-    font-size: 16px
+    font-size: 16px;
 }
 
 body {
@@ -52,7 +52,7 @@ body {
     min-height: 100vh;
     overflow: hidden;
     user-select: none;
-    position: relative
+    position: relative;
 }
 
 #valleyBg {
@@ -60,13 +60,13 @@ body {
     inset: 0;
     z-index: -1;
     overflow: hidden;
-    pointer-events: none
+    pointer-events: none;
 }
 
 #sky {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-low) 78%, var(--sky-low) 100%)
+    background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-low) 78%, var(--sky-low) 100%);
 }
 
 #sun {
@@ -78,18 +78,18 @@ body {
     background: radial-gradient(circle at 38% 35%, var(--sun-core), var(--sun-mid) 55%, var(--sun-edge) 100%);
     clip-path: polygon(35% 0%, 65% 0%, 65% 10%, 85% 10%, 85% 25%, 95% 25%, 95% 40%, 100% 40%, 100% 60%, 95% 60%, 95% 75%, 85% 75%, 85% 90%, 65% 90%, 65% 100%, 35% 100%, 35% 90%, 15% 90%, 15% 75%, 5% 75%, 5% 60%, 0% 60%, 0% 40%, 5% 40%, 5% 25%, 15% 25%, 15% 10%, 35% 10%);
     box-shadow: 0 0 60px 10px rgba(255, 224, 102, .55);
-    animation: sunPulse 5s ease-in-out infinite
+    animation: sunPulse 5s ease-in-out infinite;
 }
 
 @keyframes sunPulse {
 
     0%,
     100% {
-        filter: brightness(1)
+        filter: brightness(1);
     }
 
     50% {
-        filter: brightness(1.12)
+        filter: brightness(1.12);
     }
 }
 
@@ -100,14 +100,14 @@ body {
     background: #fff;
     opacity: .92;
     clip-path: polygon(0% 100%, 0% 60%, 12% 60%, 12% 30%, 37% 30%, 37% 10%, 62% 10%, 62% 30%, 87% 30%, 87% 60%, 100% 60%, 100% 100%);
-    filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, .08))
+    filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, .08));
 }
 
 .cloud1 {
     top: 14%;
     left: -20%;
     transform: scale(1.3);
-    animation: driftCloud 55s linear infinite
+    animation: driftCloud 55s linear infinite;
 }
 
 .cloud2 {
@@ -115,7 +115,7 @@ body {
     left: -20%;
     transform: scale(.9);
     animation: driftCloud 75s linear infinite;
-    animation-delay: -20s
+    animation-delay: -20s;
 }
 
 .cloud3 {
@@ -123,16 +123,16 @@ body {
     left: -20%;
     transform: scale(.7);
     animation: driftCloud 40s linear infinite;
-    animation-delay: -10s
+    animation-delay: -10s;
 }
 
 @keyframes driftCloud {
     0% {
-        transform: translateX(0) scale(var(--s, 1))
+        transform: translateX(0) scale(var(--s, 1));
     }
 
     100% {
-        transform: translateX(140vw) scale(var(--s, 1))
+        transform: translateX(140vw) scale(var(--s, 1));
     }
 }
 
@@ -143,7 +143,7 @@ body {
     bottom: 0;
     height: 34%;
     background: var(--hill-back);
-    clip-path: polygon(0% 100%, 0% 55%, 8% 55%, 8% 40%, 20% 40%, 20% 30%, 34% 30%, 34% 42%, 48% 42%, 48% 25%, 62% 25%, 62% 38%, 76% 38%, 76% 22%, 88% 22%, 88% 45%, 100% 45%, 100% 100%)
+    clip-path: polygon(0% 100%, 0% 55%, 8% 55%, 8% 40%, 20% 40%, 20% 30%, 34% 30%, 34% 42%, 48% 42%, 48% 25%, 62% 25%, 62% 38%, 76% 38%, 76% 22%, 88% 22%, 88% 45%, 100% 45%, 100% 100%);
 }
 
 #hillsFront {
@@ -154,7 +154,7 @@ body {
     height: 22%;
     background: var(--hill-front);
     background-image: repeating-linear-gradient(90deg, var(--grass-blade) 0 6px, transparent 6px 12px);
-    clip-path: polygon(0% 100%, 0% 60%, 10% 60%, 10% 45%, 24% 45%, 24% 60%, 38% 60%, 38% 40%, 52% 40%, 52% 58%, 66% 58%, 66% 42%, 80% 42%, 80% 60%, 92% 60%, 92% 48%, 100% 48%, 100% 100%)
+    clip-path: polygon(0% 100%, 0% 60%, 10% 60%, 10% 45%, 24% 45%, 24% 60%, 38% 60%, 38% 40%, 52% 40%, 52% 58%, 66% 58%, 66% 42%, 80% 42%, 80% 60%, 92% 60%, 92% 48%, 100% 48%, 100% 100%);
 }
 
 #crtOverlay {
@@ -165,7 +165,7 @@ body {
     background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, .18) 0 2px, transparent 2px 4px);
     box-shadow: inset 0 0 140px 40px rgba(5, 5, 15, .55);
     mix-blend-mode: multiply;
-    animation: crtFlicker 6s infinite
+    animation: crtFlicker 6s infinite;
 }
 
 @keyframes crtFlicker {
@@ -173,15 +173,15 @@ body {
     0%,
     96%,
     100% {
-        opacity: .9
+        opacity: .9;
     }
 
     97% {
-        opacity: .72
+        opacity: .72;
     }
 
     98% {
-        opacity: .95
+        opacity: .95;
     }
 }
 
@@ -189,64 +189,64 @@ button,
 input {
     font-family: inherit;
     -webkit-font-smoothing: none;
-    -moz-osx-font-smoothing: none
+    -moz-osx-font-smoothing: none;
 }
 
 @keyframes shake {
 
     0%,
     100% {
-        transform: translate(0, 0)
+        transform: translate(0, 0);
     }
 
     20% {
-        transform: translate(-6px, -5px)
+        transform: translate(-6px, -5px);
     }
 
     40% {
-        transform: translate(6px, 5px)
+        transform: translate(6px, 5px);
     }
 
     60% {
-        transform: translate(-5px, 6px)
+        transform: translate(-5px, 6px);
     }
 
     80% {
-        transform: translate(5px, -6px)
+        transform: translate(5px, -6px);
     }
 }
 
 body.shake {
-    animation: shake .4s ease-in-out
+    animation: shake .4s ease-in-out;
 }
 
 @keyframes rainbowCycle {
     0% {
-        background: var(--red)
+        background: var(--red);
     }
 
     16.6% {
-        background: var(--orange)
+        background: var(--orange);
     }
 
     33.3% {
-        background: var(--yellow)
+        background: var(--yellow);
     }
 
     50% {
-        background: var(--green)
+        background: var(--green);
     }
 
     66.6% {
-        background: var(--cyan)
+        background: var(--cyan);
     }
 
     83.3% {
-        background: var(--purple)
+        background: var(--purple);
     }
 
     100% {
-        background: var(--red)
+        background: var(--red);
     }
 }
 
@@ -257,7 +257,7 @@ body.shake {
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    background: #1a1030;
+    background: var(--cabinet);
     border: 3px solid #000;
     box-shadow: 4px 4px 0 #000;
     padding: 8px 16px;
@@ -266,36 +266,38 @@ body.shake {
 
 #hudSong {
     font-size: 14px;
-    color: #ff9dfa;
+    color: var(--pink);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
     width: 100%;
     padding-bottom: 6px;
-    border-bottom: 2px solid #241a3d;
+    border-bottom: 2px solid var(--cabinet2);
 }
 
 #hudStats {
     display: flex;
     align-items: center;
     gap: 18px;
+    text-shadow: 3px 3px 0 #000, 2px 0 0 rgba(255, 0, 77, .55), -2px 0 0 rgba(0, 229, 255, .55);
+
 }
 
 #floatScore {
     position: relative;
-    display: inline-block
+    display: inline-block;
 }
 
 @keyframes floatScore {
     0% {
         opacity: 1;
-        transform: translateY(0) scale(1)
+        transform: translateY(0) scale(1);
     }
 
     100% {
         opacity: 0;
-        transform: translateY(-28px) scale(1.25)
+        transform: translateY(-28px) scale(1.25);
     }
 }
 
@@ -309,26 +311,26 @@ body.shake {
     pointer-events: none;
     animation: floatScore 0.8s ease-out forwards;
     white-space: nowrap;
-    z-index: 10
+    z-index: 10;
 }
 
 .score-pop.clutch-pop {
-    color: #3dff5c;
-    font-size: 24px
+    color: var(--yellow);
+    font-size: 24px;
 }
 
 #stageTag {
     font-size: 16px;
-    opacity: .8
+    opacity: .8;
 }
 
 #unicornWrap {
     margin-bottom: 8px;
-    transition: transform .12s
+    transition: transform .12s;
 }
 
 #unicornWrap.blast {
-    transform: scale(1.25) rotate(-6deg)
+    transform: scale(1.25) rotate(-6deg);
 }
 
 #grid {
@@ -337,19 +339,19 @@ body.shake {
     grid-template-columns: repeat(5, 60px);
     grid-template-rows: repeat(5, 60px);
     gap: 4px;
-    background: #1a1030;
+    background: var(--cabinet);
     padding: 6px;
     border: 3px solid #000;
-    box-shadow: 6px 6px 0 #000
+    box-shadow: 6px 6px 0 #000;
 }
 
 .cell {
     width: 60px;
     height: 60px;
-    background: #241a3d;
+    background: var(--cabinet2);
     border: 2px solid #000;
     position: relative;
-    overflow: hidden
+    overflow: hidden;
 }
 
 .cd {
@@ -365,7 +367,7 @@ body.shake {
 }
 
 .warn {
-    background: repeating-linear-gradient(45deg, #ffd23f70 0 10px, #241a3d70 10px 20px)
+    background: repeating-linear-gradient(45deg, #ffd23f70 0 10px, #241a3d70 10px 20px);
 }
 
 @keyframes fireFlash {
@@ -380,7 +382,7 @@ body.shake {
 
 .fire {
     background: repeating-linear-gradient(45deg, var(--red) 0 10px, var(--orange) 10px 20px, var(--yellow) 20px 30px, var(--green) 30px 40px, var(--cyan) 40px 50px, var(--purple) 50px 60px) !important;
-    animation: fireFlash .15s ease-out
+    animation: fireFlash .15s ease-out;
 }
 
 #playerCanvas {
@@ -395,7 +397,7 @@ body.shake {
     pointer-events: none;
     image-rendering: pixelated;
     z-index: 5;
-    transition: left .6s ease-in-out, top .6s ease-in-out, opacity .5s ease-in-out
+    transition: left .6s ease-in-out, top .6s ease-in-out, opacity .5s ease-in-out;
 }
 
 #msg {
@@ -404,11 +406,11 @@ body.shake {
     min-height: 24px;
     text-align: center;
     text-shadow: 2px 2px 0 #000;
-    transition: color .15s
+    transition: color .15s;
 }
 
 #msg.clutch {
-    color: #3dff5c
+    color: var(--yellow);
 }
 
 #restart {
@@ -424,12 +426,12 @@ body.shake {
     box-shadow: 4px 4px 0 #000;
     display: none;
     animation: rainbowCycle 4s linear infinite;
-    text-shadow: 2px 2px 0 #000
+    text-shadow: 2px 2px 0 #000;
 }
 
 #restart:active {
     box-shadow: 2px 2px 0 #000;
-    transform: translate(2px, 2px)
+    transform: translate(2px, 2px);
 }
 #menuBtn {
     padding: 8px 18px;
@@ -438,7 +440,7 @@ body.shake {
     font-weight: normal;
     text-transform: uppercase;
     border: 3px solid #000;
-    background: #241a3d;
+    background: var(--cabinet2);
     color: #fff;
     cursor: pointer;
     box-shadow: 4px 4px 0 #000;
@@ -452,18 +454,18 @@ body.shake {
 #hearts {
     display: flex;
     gap: 4px;
-    align-items: center
+    align-items: center;
 }
 
 .heart {
     width: 14px;
     height: 14px;
-    background: #ff004d;
-    border: 2px solid #000
+    background: var(--red);
+    border: 2px solid #000;
 }
 
 .heart.lost {
-    background: #332244
+    background: #332244;
 }
 
 #startOverlay {
@@ -475,7 +477,7 @@ body.shake {
     align-items: center;
     justify-content: center;
     z-index: 999;
-    padding: 16px
+    padding: 16px;
 }
 
 #songPicker {
@@ -485,14 +487,14 @@ body.shake {
     gap: 8px;
     font-size: 16px;
     width: 100%;
-    background: #241a3d;
+    background: var(--cabinet2);
     border: 2px solid #000;
     padding: 10px 14px;
 }
 
 .song-label {
     font-size: 12px;
-    color: #ff9dfa;
+    color: var(--pink);
     opacity: 0.8;
 }
 
@@ -527,7 +529,7 @@ body.shake {
 #songTitle {
     flex: 1;
     text-align: center;
-    color: #3dff5c;
+    color: var(--green);
     font-size: 16px;
     text-shadow: 2px 2px 0 #000;
     white-space: nowrap;
@@ -543,7 +545,7 @@ body.shake {
 
 #menuPanel {
     width: min(92vw, 560px);
-    background: #1a1030;
+    background: var(--cabinet);
     border: 4px solid #000;
     box-shadow: 10px 10px 0 #000;
     padding: 32px 24px;
@@ -551,62 +553,63 @@ body.shake {
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    text-align: center
+    text-align: center;
 }
 
 #menuTitle {
     font-size: 32px;
     line-height: 1.35;
-    text-shadow: 3px 3px 0 #000, 2px 0 0 rgba(255, 0, 77, .55), -2px 0 0 rgba(0, 229, 255, .55)
+    text-shadow: 3px 3px 0 #000, 2px 0 0 rgba(255, 0, 77, .55), -2px 0 0 rgba(0, 229, 255, .55);
 }
 
 #menuBy {
     font-size: 16px;
     opacity: .7;
     margin-top: 8px;
-    letter-spacing: 1px
+    letter-spacing: 1px;
 }
 
 .I {
     text-decoration: underline;
     text-decoration-thickness: 3px;
     text-underline-offset: 5px;
-    color: #ff9dfa
+    color: var(--pink);
 }
 
 .menu-divider {
     width: 100%;
     height: 8px;
     background: repeating-linear-gradient(45deg, var(--red) 0 8px, var(--orange) 8px 16px, var(--yellow) 16px 24px, var(--green) 24px 32px, var(--cyan) 32px 40px, var(--purple) 40px 48px);
-    border: 2px solid #000
+    border: 2px solid #000;
 }
 
 #menuTagline {
     font-size: 16px;
     line-height: 1.6;
     opacity: .9;
-    text-transform: none
+    text-transform: none;
+    text-shadow: 3px 3px 0 #000, 2px 0 0 rgba(255, 0, 77, .55), -2px 0 0 rgba(0, 229, 255, .55);
 }
 
 #menuControls {
     font-size: 16px;
-    background: #241a3d;
+    background: var(--cabinet2);
     border: 2px solid #000;
     padding: 14px 18px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 100%
+    width: 100%;
 }
 
 #menuControls div {
     display: flex;
     justify-content: space-between;
-    gap: 16px
+    gap: 16px;
 }
 
 #menuControls span.key {
-    color: #3dff5c
+    color: var(--green)
 }
 
 #startBtn {
@@ -623,18 +626,18 @@ body.shake {
     cursor: pointer;
     box-shadow: 6px 6px 0 #000;
     margin-top: 4px;
-    animation: rainbowCycle 4s linear infinite
+    animation: rainbowCycle 4s linear infinite;
 }
 
 #startBtn:active {
     box-shadow: 2px 2px 0 #000;
-    transform: translate(4px, 4px)
+    transform: translate(4px, 4px);
 }
 
 kbd {
     font-family: inherit;
-    color: #3dff5c;
-    background: #1a1030;
+    color: var(--green);
+    background: var(--cabinet);
     border: 2px solid #000;
     padding: 2px 6px;
     box-shadow: 2px 2px 0 #000;
