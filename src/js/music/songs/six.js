@@ -34,25 +34,38 @@ const songSix = [
             bpm: 130,
             patterns: [
                 { t: "pos" },
-                { t: "random", i:14 },
+                { t: "pos" },
+                { t: "cross", r:[2], c:[2] },
             ]
         },
         {
-            start: 20,
-            bpm: 130,
+            start: 18,
+            bpm: 260,
             patterns: [
-                { t: "row", i: [3,4] },
-                { t: "row", i: [2,3] },
-                { t: "row", i: [1,2] },
-                { t: "row", i: [0,1] },
-                { t: "col", i: [3,4] },
-                { t: "col", i: [2,3] },
-                { t: "col", i: [1,2] },
-                { t: "col", i: [0,1] },
+                { t: "row", i: [4] },
+                { t: "row", i: [3] },
+                { t: "row", i: [2] },
+                { t: "row", i: [1] },
+                { t: "row", i: [0] },
+                { t: "col", i: [4] },
+                { t: "col", i: [3] },
+                { t: "col", i: [2] },
+                { t: "col", i: [1] },
+                { t: "col", i: [0] },
+                { t: "row", i: [0] },
+                { t: "row", i: [1] },
+                { t: "row", i: [2] },
+                { t: "row", i: [3] },
+                { t: "row", i: [4] },
+                { t: "col", i: [0] },
+                { t: "col", i: [1] },
+                { t: "col", i: [2] },
+                { t: "col", i: [3] },
+                { t: "col", i: [4] },
             ]
         },
         {
-            start: 26,
+            start: 24,
             bpm: 130,
             patterns: [
                 { t: "col", i: [0,2,4] },
@@ -60,14 +73,14 @@ const songSix = [
             ]
         },
         {
-            start: 30,
+            start: 28,
             bpm: 130,
             patterns: [
                 { t: "pos"},
             ]
         },
         {
-            start: 35,
+            start: 33,
             bpm: 130,
             patterns: [
                 { t: "checker", odd:true},
@@ -75,29 +88,68 @@ const songSix = [
             ]
         },
         {
-            start: 38,
+            start: 36,
             bpm: 130,
             patterns: [
-                { t: "pos", odd:true},
+                { t: "pos"},
+            ]
+        },
+        {
+            start: 38,
+            bpm: 260,
+            patterns: [
+                { t: "pos"},
+                { t: "cross", r:[0,4], c:[0,4] },
             ]
         },
         {
             start: 40,
-            bpm: 260,
+            bpm: 130,
             patterns: [
-                { t: "pos", odd:true},
+                { t: "cross", r:[0,4], c:[0,4]},
+                { t: "dots", i:[6,7,8,11,13,16,17,18]},
+                { t: "center"},
             ]
         },
         {
-            start: 43,
-            bpm: 130,
+            start: 46,
+            bpm: 260,
             patterns: [
-                { t: "cross", r:[0,1,3,4], c:[0,1,3,4]},
+                { t: "pos"},
+                { t: "pos"},
+                { t: "pos"},
+                { t: "pos"},
+                { t: "pos"},
+                { t: "pos"},
                 { t: "area", r:[1,2,3], c:[1,2,3]},
-                { t: "col", i:[0,1,2]},
-                { t: "col", i:[2,3,4]},
+
             ]
         },
+        {
+            start: 50,
+            bpm: 130,
+            patterns: [
+                { t: "area", r:[1,2,3], c:[1,2,3]},
+                { t: "cross", r:[0,4], c:[0,4]},
+            ]
+        },
+        {
+            start: 54,
+            bpm: 130,
+            patterns: [
+                { t: "pos"},
+            ]
+        },
+        {
+            start: 55,
+            bpm: 260,
+            patterns: [
+                { t: "pos"},
+                { t: "pos"},
+                { t: "pos"},
+                { t: "random", i:5},
+            ]
+        }
     ],
     [
         {

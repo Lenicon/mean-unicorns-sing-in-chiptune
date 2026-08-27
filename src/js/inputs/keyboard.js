@@ -23,7 +23,7 @@ document.onkeydown = e => {
         returnToMenu();
         return;
     }
-    if (e.code === 'Enter') {
+    if (e.code === 'Enter' || e.code === 'Space') {
         e.preventDefault();
         if (!gameStarted) hideMenu();
         else resetGame();

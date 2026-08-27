@@ -49,18 +49,6 @@ C6 = 15, CS6 = 16, DB6 = 16, D6 = 17, DS6 = 18, EB6 = 18, E6 = 19, F6 = 20, FS6 
 C7 = 27, CS7 = 28, DB7 = 28, D7 = 29, DS7 = 30, EB7 = 30, E7 = 31, F7 = 32, FS7 = 33, GB7 = 33, G7 = 34, GS7 = 35, AB7 = 35, A7 = 36, AS7 = 37, BB7 = 37, B7 = 38,
 C8 = 39, CS8 = 40, DB8 = 40, D8 = 41, DS8 = 42, EB8 = 42, E8 = 43, F8 = 44, FS8 = 45, GB8 = 45, G8 = 46, GS8 = 47, AB8 = 47, A8 = 48, AS8 = 49, BB8 = 49, B8 = 50;
 
-const NOTES_MAP = {
-    C0, CS0, DB0, D0, DS0, EB0, E0, F0, FS0, GB0, G0, GS0, AB0, A0, AS0, BB0, B0,
-    C1, CS1, DB1, D1, DS1, EB1, E1, F1, FS1, GB1, G1, GS1, AB1, A1, AS1, BB1, B1,
-    C2, CS2, DB2, D2, DS2, EB2, E2, F2, FS2, GB2, G2, GS2, AB2, A2, AS2, BB2, B2,
-    C3, CS3, DB3, D3, DS3, EB3, E3, F3, FS3, GB3, G3, GS3, AB3, A3, AS3, BB3, B3,
-    C4, CS4, DB4, D4, DS4, EB4, E4, F4, FS4, GB4, G4, GS4, AB4, A4, AS4, BB4, B4,
-    C5, CS5, DB5, D5, DS5, EB5, E5, F5, FS5, GB5, G5, GS5, AB5, A5, AS5, BB5, B5,
-    C6, CS6, DB6, D6, DS6, EB6, E6, F6, FS6, GB6, G6, GS6, AB6, A6, AS6, BB6, B6,
-    C7, CS7, DB7, D7, DS7, EB7, E7, F7, FS7, GB7, G7, GS7, AB7, A7, AS7, BB7, B7,
-    C8, CS8, DB8, D8, DS8, EB8, E8, F8, FS8, GB8, G8, GS8, AB8, A8, AS8, BB8, B8
-};
-
 let BAR = 60 / 130 * 4;
 let STEP_DUR = BAR / 16;
 let STAGES = [];

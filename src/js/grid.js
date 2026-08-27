@@ -64,6 +64,7 @@ function positionUniFlyAt(r, c) {
 }
 function triggerIntroFlyOut() {
     introDone = true;
+    pew(1);
     screenshake(400);
     uniFlyCanvas.style.left = UNI_DOCK_LEFT + 'px';
     uniFlyCanvas.style.top = UNI_DOCK_TOP + 'px';
