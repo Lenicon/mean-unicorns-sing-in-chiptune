@@ -134,6 +134,7 @@ function endGame(survived) {
     msgEl.textContent = survived ? 'Unicorn Likes You!' : 'Game Over';
     restartBtn.style.display = 'inline-block';
     menuBtn.style.display = 'inline-block';
+    clearCells();
     stopMusic();
     if (survived) playOutro();
     else { playerCanvas.style.transform = 'rotate(-90deg)'; stopAllAudio() }

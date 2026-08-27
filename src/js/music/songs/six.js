@@ -3,12 +3,99 @@ const songSix = [
     [
         {
             start: 0,
+            bpm: 260,
+            patterns: [
+                { t: "pos" },
+                { t: "pos" },
+                { t: "pos" },
+                { t: "area", r: [1,2,3], c: [1,2,3] },
+                { t: "pos" },
+                { t: "pos" },
+                { t: "pos" },
+                { t: "cross", r: [0, 4], c: [0, 4] },
+            ]
+        },
+        {
+            start: 6,
             bpm: 130,
             patterns: [
-                { t: "corners" },
-                { t: "center" },
-                { t: "cross", r: [0, 4], c: [0, 4] },
-                // { t: "area", r: [1,2,3], c: [1,2,3] },
+                { t: "col", i: [0,1] },
+                { t: "col", i: [1,2] },
+                { t: "col", i: [2,3] },
+                { t: "col", i: [3,4] },
+                { t: "row", i: [0,1] },
+                { t: "row", i: [1,2] },
+                { t: "row", i: [2,3] },
+                { t: "row", i: [3,4] },
+            ]
+        },
+        {
+            start: 13,
+            bpm: 130,
+            patterns: [
+                { t: "pos" },
+                { t: "random", i:14 },
+            ]
+        },
+        {
+            start: 20,
+            bpm: 130,
+            patterns: [
+                { t: "row", i: [3,4] },
+                { t: "row", i: [2,3] },
+                { t: "row", i: [1,2] },
+                { t: "row", i: [0,1] },
+                { t: "col", i: [3,4] },
+                { t: "col", i: [2,3] },
+                { t: "col", i: [1,2] },
+                { t: "col", i: [0,1] },
+            ]
+        },
+        {
+            start: 26,
+            bpm: 130,
+            patterns: [
+                { t: "col", i: [0,2,4] },
+                { t: "col", i: [1,3] },
+            ]
+        },
+        {
+            start: 30,
+            bpm: 130,
+            patterns: [
+                { t: "pos"},
+            ]
+        },
+        {
+            start: 35,
+            bpm: 130,
+            patterns: [
+                { t: "checker", odd:true},
+                { t: "checker", odd:false},
+            ]
+        },
+        {
+            start: 38,
+            bpm: 130,
+            patterns: [
+                { t: "pos", odd:true},
+            ]
+        },
+        {
+            start: 40,
+            bpm: 260,
+            patterns: [
+                { t: "pos", odd:true},
+            ]
+        },
+        {
+            start: 43,
+            bpm: 130,
+            patterns: [
+                { t: "cross", r:[0,1,3,4], c:[0,1,3,4]},
+                { t: "area", r:[1,2,3], c:[1,2,3]},
+                { t: "col", i:[0,1,2]},
+                { t: "col", i:[2,3,4]},
             ]
         },
     ],
