@@ -18,6 +18,9 @@ const startOverlay = document.getElementById('startOverlay');
 const startBtn = document.getElementById('startBtn');
 const unicornCanvas = document.getElementById('unicornCanvas');
 const DEFAULT_MSG = 'Arrow keys / WASD to move';
+const prevBtn = document.getElementById('prevSongBtn');
+const nextBtn = document.getElementById('nextSongBtn');
+const songTitle = document.getElementById('songTitle');
 
 
 let cells = [];

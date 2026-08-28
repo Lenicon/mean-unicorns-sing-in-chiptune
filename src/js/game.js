@@ -74,7 +74,7 @@ function tick() {
         }
     });
     if (firingGroups.length) {
-        pew();
+        sfxPew();
         unicornWrap.classList.add('blast');
         setTimeout(() => unicornWrap.classList.remove('blast'), 150);
         const allFiring = firingGroups.flatMap(g => g.cells);
@@ -165,6 +165,7 @@ function resetAll(){
     }
 }
 function resetGame() {
+    sfxButtonClick();
     resetAll();
     setupGameplay();
     stopAllAudio();
@@ -181,6 +182,7 @@ function launchGame() {
 }
 function hideMenu() {
     if (gameStarted) return;
+    sfxPlay();
     setSong(currentSongIdx);
     hudSongTitle.textContent = getSongName();
     initAudio();
@@ -188,6 +190,7 @@ function hideMenu() {
     setupIntro();
     gameStarted = true;
     startOverlay.style.display = 'none';
+    stopAllAudio();
 }
 function returnToMenu() {
     running = false;
@@ -198,6 +201,7 @@ function returnToMenu() {
     stopAllAudio();
     clearCells();
     setupIntro();
+    sfxButtonClick();
     startOverlay.style.display = 'flex';
     restartBtn.style.display = 'none';
     menuBtn.style.display = 'none';
@@ -205,4 +209,7 @@ function returnToMenu() {
 startBtn.addEventListener('click', hideMenu);
 restartBtn.addEventListener('click', resetGame);
 menuBtn.addEventListener('click', returnToMenu);
+startBtn.addEventListener('mouseover',sfxButtonHover);
+restartBtn.addEventListener('mouseover',sfxButtonHover);
+menuBtn.addEventListener('mouseover',sfxButtonHover);
 buildGrid();

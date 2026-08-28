@@ -26,18 +26,21 @@ const getSongPattern = () => getSong()[1];
 const getSongMusic = () => getSong()[2];
 
 function updateSongDisplay() {
-    const songTitle = document.getElementById('songTitle');
     if (songTitle && SONGS[currentSongIdx]) {
         songTitle.textContent = getSongName();
+        startMusic();
     }
 }
 
 function initSongPicker() {
-    const prevBtn = document.getElementById('prevSongBtn');
-    const nextBtn = document.getElementById('nextSongBtn');
 
-    if (prevBtn) prevBtn.addEventListener('click', prevSong);
-    if (nextBtn) nextBtn.addEventListener('click', nextSong);
+
+    prevBtn.addEventListener('click', prevSong);
+    nextBtn.addEventListener('click', nextSong);
+    prevBtn.addEventListener('click', sfxButtonClick);
+    nextBtn.addEventListener('click', sfxButtonClick);
+    prevBtn.addEventListener('hover', sfxButtonHover);
+    nextBtn.addEventListener('hover', sfxButtonHover);
 
     updateSongDisplay();
 }

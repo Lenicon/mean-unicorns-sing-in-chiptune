@@ -63,9 +63,12 @@ function busClean_() { ensureBus_(); return cleanGain; }
 
 function F(n) { return n == null ? 0 : 440 * Math.pow(2, n / 12); }
 
-function pew(t) {
+// SFX
+// for some reason it starts acting weird so i have this
+function safeTime(t, context) {return (typeof t === 'number' && isFinite(t)) ? t : context.currentTime;}
+function sfxPew(t) {
     const c = ac_();
-    const time = t || c.currentTime;
+    const time = safeTime(t,c);
     const o = c.createOscillator(), g = c.createGain();
     o.type = 'square';
     o.frequency.setValueAtTime(900, time);
@@ -75,6 +78,137 @@ function pew(t) {
     o.connect(g); g.connect(c.destination);
     o.start(time); o.stop(time + 0.14);
 }
+
+function sfxPlay(t) {
+    const c = ac_();
+    const time = safeTime(t,c);
+    
+    const o1 = c.createOscillator(), o2 = c.createOscillator();
+    const g1 = c.createGain(), g2 = c.createGain();
+    
+    o1.type = 'sine';
+    o1.frequency.setValueAtTime(1318.51, time);
+    o1.frequency.exponentialRampToValueAtTime(1046.50, time + 0.12);
+    
+    o2.type = 'triangle';
+    o2.frequency.setValueAtTime(2637.02, time);
+    o2.frequency.exponentialRampToValueAtTime(2093.00, time + 0.08);
+    g1.gain.setValueAtTime(0.22, time);
+    g1.gain.exponentialRampToValueAtTime(0.0001, time + 0.32);
+    
+    g2.gain.setValueAtTime(0.12, time);
+    g2.gain.exponentialRampToValueAtTime(0.0001, time + 0.18);
+    
+    o1.connect(g1); g1.connect(busClean_());
+    o2.connect(g2); g2.connect(busClean_());
+    
+    o1.start(time); o1.stop(time + 0.33);
+    o2.start(time); o2.stop(time + 0.19);
+}
+
+function sfxButtonClick(t) {
+    const c = ac_();
+    const time = safeTime(t,c);
+    
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(900, time);
+    o.frequency.exponentialRampToValueAtTime(150, time + 0.035);
+    
+    g.gain.setValueAtTime(0.16, time);
+    g.gain.exponentialRampToValueAtTime(0.001, time + 0.035);
+    
+    const n = c.createBufferSource(), ng = c.createGain(), nf = c.createBiquadFilter();
+    n.buffer = noiseBuf_();
+    nf.type = 'highpass';
+    nf.frequency.value = 4000;
+    ng.gain.setValueAtTime(0.04, time);
+    ng.gain.exponentialRampToValueAtTime(0.0001, time + 0.02);
+    
+    o.connect(g); g.connect(busClean_());
+    n.connect(nf); nf.connect(ng); ng.connect(busClean_());
+    
+    o.start(time); o.stop(time + 0.04);
+    n.start(time); n.stop(time + 0.025);
+}
+
+function sfxButtonHover(t) {
+    const c = ac_();
+    const time = safeTime(t,c);
+    const o = c.createOscillator(), g = c.createGain();
+    
+    o.type = 'sine';
+    o.frequency.setValueAtTime(523.25, time); // C5
+    o.frequency.exponentialRampToValueAtTime(659.25, time + 0.03); // E5
+    
+    g.gain.setValueAtTime(0.05, time);
+    g.gain.exponentialRampToValueAtTime(0.0001, time + 0.035);
+    
+    o.connect(g); g.connect(busClean_());
+    o.start(time); o.stop(time + 0.04);
+}
+
+function sfxNeigh(t) {
+    const c = ac_();
+    const time = safeTime(t,c);
+    
+    const voice = c.createOscillator();
+    const vibrato = c.createOscillator();
+    const vibratoGain = c.createGain();
+    const voiceGain = c.createGain();
+    const filter = c.createBiquadFilter();
+    
+    voice.type = 'sawtooth';
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(1100, time);
+    filter.Q.value = 3.5;
+
+    voice.frequency.setValueAtTime(600, time);
+    voice.frequency.exponentialRampToValueAtTime(1150, time + 0.18);
+    voice.frequency.exponentialRampToValueAtTime(800, time + 0.45);
+    voice.frequency.exponentialRampToValueAtTime(350, time + 0.7);
+    
+    vibrato.type = 'sine';
+    vibrato.frequency.value = 16;
+    vibratoGain.gain.setValueAtTime(30, time);
+    vibratoGain.gain.exponentialRampToValueAtTime(80, time + 0.2);
+    vibratoGain.gain.exponentialRampToValueAtTime(10, time + 0.65);
+    
+    vibrato.connect(voice.frequency);
+    
+    voiceGain.gain.setValueAtTime(0.001, time);
+    voiceGain.gain.exponentialRampToValueAtTime(0.18, time + 0.08);
+    voiceGain.gain.setValueAtTime(0.18, time + 0.4);
+    voiceGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.72);
+    
+    voice.connect(filter);
+    filter.connect(voiceGain);
+    voiceGain.connect(bus_());
+    
+    voice.start(time); voice.stop(time + 0.73);
+    vibrato.start(time); vibrato.stop(time + 0.73);
+    
+    const snort = c.createBufferSource();
+    const snortFilter = c.createBiquadFilter();
+    const snortGain = c.createGain();
+    
+    snort.buffer = noiseBuf_();
+    snortFilter.type = 'lowpass';
+    snortFilter.frequency.setValueAtTime(1600, time + 0.4);
+    snortFilter.frequency.exponentialRampToValueAtTime(300, time + 0.8);
+    
+    snortGain.gain.setValueAtTime(0.0001, time + 0.4);
+    snortGain.gain.exponentialRampToValueAtTime(0.07, time + 0.52);
+    snortGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.82);
+    
+    snort.connect(snortFilter);
+    snortFilter.connect(snortGain);
+    snortGain.connect(busClean_());
+    
+    snort.start(time + 0.4);
+    snort.stop(time + 0.83);
+}
+
 
 function tone(freq, t, dur, type, vol) {
     if (!freq) return;
