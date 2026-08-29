@@ -1,4 +1,4 @@
-let WARN_BEATS = 1;
+var WARN_BEATS = 1;
 const CLUTCH_BONUS = 15;
 const N = 5, CELL = 60, GAP = 4, PAD = 6, PLAYER_PX = 6, UNI_PX = 5;
 const GRID_W = PAD * 2 + N * CELL + (N - 1) * GAP;
@@ -23,24 +23,24 @@ const nextBtn = document.getElementById('nextSongBtn');
 const songTitle = document.getElementById('songTitle');
 
 
-let cells = [];
-let player = { r: 4, c: 2, facingLeft: false };
-let lives = 3;
-let score = 0;
-let pending = [];
-let running = false;
-let gameStarted = false;
-let introDone = false;
-let timer = null;
-let clockTimer = null;
-let playerCanvas;
-let uniFlyCanvas;
-let startTime = 0;
-let currentStageIdx = -1;
-let stageBeatCounter = 0;
-let canMove = true;
+var cells = [];
+var player = { r: 4, c: 2, facingLeft: false };
+var lives = 3;
+var score = 0;
+var pending = [];
+var running = false;
+var gameStarted = false;
+var introDone = false;
+var timer = null;
+var clockTimer = null;
+var playerCanvas;
+var uniFlyCanvas;
+var startTime = 0;
+var currentStageIdx = -1;
+var stageBeatCounter = 0;
+var canMove = true;
 
-let audioCtx = null;
+var audioCtx = null;
 const
 C0 = -57, CS0 = -56, DB0 = -56, D0 = -55, DS0 = -54, EB0 = -54, E0 = -53, F0 = -52, FS0 = -51, GB0 = -51, G0 = -50, GS0 = -49, AB0 = -49, A0 = -48, AS0 = -47, BB0 = -47, B0 = -46,
 C1 = -45, CS1 = -44, DB1 = -44, D1 = -43, DS1 = -42, EB1 = -42, E1 = -41, F1 = -40, FS1 = -39, GB1 = -39, G1 = -38, GS1 = -37, AB1 = -37, A1 = -36, AS1 = -35, BB1 = -35, B1 = -34,
@@ -52,8 +52,8 @@ C6 = 15, CS6 = 16, DB6 = 16, D6 = 17, DS6 = 18, EB6 = 18, E6 = 19, F6 = 20, FS6 
 C7 = 27, CS7 = 28, DB7 = 28, D7 = 29, DS7 = 30, EB7 = 30, E7 = 31, F7 = 32, FS7 = 33, GB7 = 33, G7 = 34, GS7 = 35, AB7 = 35, A7 = 36, AS7 = 37, BB7 = 37, B7 = 38,
 C8 = 39, CS8 = 40, DB8 = 40, D8 = 41, DS8 = 42, EB8 = 42, E8 = 43, F8 = 44, FS8 = 45, GB8 = 45, G8 = 46, GS8 = 47, AB8 = 47, A8 = 48, AS8 = 49, BB8 = 49, B8 = 50;
 
-let BAR = 60 / 130 * 4;
-let STEP_DUR = BAR / 16;
-let STAGES = [];
-let SECTIONS = [];
-let GAME_DURATION_SECONDS = 199;
+var BAR = 60 / 130 * 4;
+var STEP_DUR = BAR / 16;
+var STAGES = [];
+var SECTIONS = [];
+var GAME_DURATION_SECONDS = 199;

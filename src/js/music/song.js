@@ -1,4 +1,4 @@
-SONGS = [songTwo, songOne, songThree, songFour, songFive, songSix];
+SONGS = [songOne,songTwo,songFive,songSix];
 currentSongIdx = 0;
 const setSong = (idx) => {
     currentSongIdx = (idx + SONGS.length) % SONGS.length;
@@ -88,3 +88,4 @@ function keyToPattern(p) {
     else if (p.t === 'pos') { list.push([player.r, player.c]); }
     return list;
 }
+setSong(0);

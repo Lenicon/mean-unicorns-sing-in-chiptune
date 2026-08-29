@@ -5,9 +5,10 @@ const songTwo = [
             start: 0,
             bpm: 35,
             patterns: [
-                { t: "center" },
-                { t: "area", r: [1, 2, 3], c: [1, 2, 3] },
-                { t: "cross", r: [0, 1, 3, 4], c: [0, 1, 3, 4] }
+                { t: "row", i:[0,1] },
+                { t: "row", i:[0,1,2,3] },
+                { t: "row", i:[4,3] },
+                { t: "row", i:[4,3,2,1] },
             ]
         },
     ],
