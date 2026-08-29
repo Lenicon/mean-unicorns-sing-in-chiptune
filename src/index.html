@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Mean Unicorns Sing In Chiptune by Len.icon</title>
-    <link rel="stylesheet" href="style.css"></link>
+    <link rel="stylesheet" href="style.css">
+    </link>
 </head>
 
 <body>
@@ -27,29 +28,55 @@
             <div class="menu-divider"></div>
             <div id="menuTagline">For js13kGame Jam</div>
 
-            <div id="songPicker">
-                <span class="song-label">SELECT SONG</span>
-                <div class="song-selector-controls">
-                    <button id="prevSongBtn" class="arrow-btn">&lt;</button>
-                    <span id="songTitle">Song Name</span>
-                    <button id="nextSongBtn" class="arrow-btn">&gt;</button>
+            <div id="menuTabs">
+                <button type="button" class="tab-btn active" data-tab="song" id="tabSongBtn">Song</button>
+                <button type="button" class="tab-btn" data-tab="controls" id="tabControlsBtn">Controls</button>
+            </div>
+
+            <div class="tab-panel active" id="tab-song">
+                <div id="songPicker">
+                    <span class="song-label">SELECT SONG</span>
+                    <div class="song-selector-controls">
+                        <button id="prevSongBtn" class="arrow-btn">&lt;</button>
+                        <span id="songTitle">Song Name</span>
+                        <button id="nextSongBtn" class="arrow-btn">&gt;</button>
+                    </div>
+                    <div class="song-preview-controls">
+                        <button id="previewPlayBtn" class="arrow-btn" aria-label="Play preview">&#9654;</button>
+                        <div class="volume-control">
+                            <span class="song-label">VOL</span>
+                            <input type="range" id="volumeSlider" min="0" max="100" value="70">
+                        </div>
+                    </div>
+                </div>
+                <div id="songStats">
+                    <div><span>Length</span><span id="statsLength" class="stat-value">0:00</span></div>
+                    <div><span>Last Score</span><span id="statsLastScore" class="stat-value">0</span></div>
+                    <div><span>High Score</span><span id="statsHighScore" class="stat-value">0</span></div>
                 </div>
             </div>
 
-            <div id="menuControls">
-                <div><span>Move</span><span class="key">
-                    <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> / <kbd>↑</kbd> <kbd>←</kbd> <kbd>↓</kbd> <kbd>→</kbd>
-                </span></div>
-                <div><span>Switch Song</span><span class="key"><kbd>W</kbd> <kbd>D</kbd> / <kbd>←</kbd> <kbd>→</kbd></span></div>
-                <div><span>START / Restart</span><span class="key"><kbd>Enter</kbd></span></div>
-                <div><span>Main Menu</span><span class="key"><kbd>M</kbd></span></div>
-            </div><button id="startBtn">Ride The Unicorn</button>
+            <div class="tab-panel" id="tab-controls">
+                <div id="menuControls">
+                    <div><span>Move</span><span class="key">
+                            <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> / <kbd>↑</kbd> <kbd>←</kbd> <kbd>↓</kbd>
+                            <kbd>→</kbd>
+                        </span></div>
+                    <div><span>Switch Song</span><span class="key"><kbd>W</kbd> <kbd>D</kbd> / <kbd>←</kbd>
+                            <kbd>→</kbd></span></div>
+                    <div><span>START / Restart</span><span class="key"><kbd>Enter</kbd></span></div>
+                    <div><span>Main Menu</span><span class="key"><kbd>M</kbd></span></div>
+                </div>
+            </div>
+
+            <button id="startBtn">Ride The Unicorn</button>
         </div>
     </div>
     <div id="hud">
         <div id="hudSong"><span id="hudSongTitle">Song Name</span></div>
         <div id="hudStats">
             <div id="floatScore">Score: <span id="score">0</span></div>
+            <div>High: <span id="highScoreVal">0</span></div>
             <div>Time: <span id="timeVal">0.0</span>s</div>
             <div id="hearts"></div>
         </div>
@@ -61,11 +88,29 @@
         <button id="restart">ENTER to Restart</button>
         <button id="menuBtn">M for Main Menu</button>
     </div>
-    
+    <div id="touchControls" aria-hidden="true">
+        <div class="tc-row">
+            <div class="tc-spacer"></div>
+            <button type="button" class="tc-btn" id="tcUp" aria-label="Move up">&#9650;</button>
+            <div class="tc-spacer"></div>
+        </div>
+        <div class="tc-row">
+            <button type="button" class="tc-btn" id="tcLeft" aria-label="Move left">&#9664;</button>
+            <div class="tc-spacer"></div>
+            <button type="button" class="tc-btn" id="tcRight" aria-label="Move right">&#9654;</button>
+        </div>
+        <div class="tc-row">
+            <div class="tc-spacer"></div>
+            <button type="button" class="tc-btn" id="tcDown" aria-label="Move down">&#9660;</button>
+            <div class="tc-spacer"></div>
+        </div>
+    </div>
+
     <script src="js/inputs/keyboard.js"></script>
     <script src="js/sprites.js"></script>
     <script src="js/const.js"></script>
-    
+    <script src="js/stats.js"></script>
+
     <script src="js/music/songs/one.js"></script>
     <script src="js/music/songs/two.js"></script>
     <script src="js/music/songs/three.js"></script>
@@ -78,6 +123,7 @@
     <script src="js/ui.js"></script>
     <script src="js/grid.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/inputs/touch.js"></script>
 </body>
 
 </html>

@@ -28,21 +28,47 @@ const getSongMusic = () => getSong()[2];
 function updateSongDisplay() {
     if (songTitle && SONGS[currentSongIdx]) {
         songTitle.textContent = getSongName();
-        startMusic();
+        const wasPlaying = musicOn;
+        resetMusicPosition();
+        if (wasPlaying) {
+            musicOn = true;
+            scheduler();
+        }
+        updatePreviewButton();
+        updateStatsDisplay();
     }
+}
+
+function updatePreviewButton() {
+    if (previewPlayBtn) previewPlayBtn.innerHTML = musicOn ? '&#10074;&#10074;' : '&#9654;';
+}
+
+function togglePreview() {
+    initAudio();
+    if (musicOn) stopMusic();
+    else resumeMusic();
+    updatePreviewButton();
 }
 
 function initSongPicker() {
 
 
-    prevBtn.addEventListener('click', prevSong);
     nextBtn.addEventListener('click', nextSong);
-    prevBtn.addEventListener('click', sfxButtonClick);
     nextBtn.addEventListener('click', sfxButtonClick);
-    prevBtn.addEventListener('hover', sfxButtonHover);
-    nextBtn.addEventListener('hover', sfxButtonHover);
+    nextBtn.addEventListener('mouseover', sfxButtonHover);
+    prevBtn.addEventListener('click', prevSong);
+    prevBtn.addEventListener('click', sfxButtonClick);
+    prevBtn.addEventListener('mouseover', sfxButtonHover);
 
-    updateSongDisplay();
+    if (previewPlayBtn) {
+        previewPlayBtn.addEventListener('click', togglePreview);
+        previewPlayBtn.addEventListener('mouseover', sfxButtonHover);
+    }
+
+    songTitle.textContent = getSongName();
+    startMusic();
+    updatePreviewButton();
+    updateStatsDisplay();
 }
 
 window.addEventListener('DOMContentLoaded', initSongPicker);
