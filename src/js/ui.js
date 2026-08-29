@@ -20,3 +20,17 @@ function flashMsg(text, cls, revertTo) {
         if (running) msgEl.textContent = revertTo;
     }, 650);
 }
+
+function initTabs() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.dataset.tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + target));
+            sfxButtonClick();
+        });
+        btn.addEventListener('mouseover', sfxButtonHover);
+    });
+}
+window.addEventListener('DOMContentLoaded', initTabs);

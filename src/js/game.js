@@ -136,6 +136,18 @@ function endGame(survived) {
     menuBtn.style.display = 'inline-block';
     clearCells();
     stopMusic();
+    setTouchControlsActive(false);
+
+    const songName = getSongName();
+    setLastScore(songName, score);
+    const isNewHigh = setHighScoreIfBetter(songName, score);
+    if (highScoreVal) highScoreVal.textContent = getHighScore(songName);
+    updateStatsDisplay();
+    if (isNewHigh) {
+        const baseMsg = msgEl.textContent;
+        flashMsg('NEW HIGH SCORE!', 'clutch', baseMsg);
+    }
+
     if (survived) playOutro();
     else { playerCanvas.style.transform = 'rotate(-90deg)'; stopAllAudio() }
 }
@@ -152,6 +164,7 @@ function resetAll(){
     running = false;
     scoreEl.textContent = '0';
     timeValEl.textContent = '0.0';
+    if (highScoreVal) highScoreVal.textContent = getHighScore(getSongName());
     msgEl.classList.remove('clutch');
     msgEl.textContent = DEFAULT_MSG;
     restartBtn.style.display = 'none';
@@ -170,6 +183,7 @@ function resetGame() {
     setupGameplay();
     stopAllAudio();
     launchGame();
+    setTouchControlsActive(true);
 }
 function launchGame() {
     if (running) return;
@@ -191,6 +205,7 @@ function hideMenu() {
     gameStarted = true;
     startOverlay.style.display = 'none';
     stopAllAudio();
+    setTouchControlsActive(true);
 }
 function returnToMenu() {
     running = false;
@@ -205,6 +220,10 @@ function returnToMenu() {
     startOverlay.style.display = 'flex';
     restartBtn.style.display = 'none';
     menuBtn.style.display = 'none';
+    startMusic();
+    updatePreviewButton();
+    updateStatsDisplay();
+    setTouchControlsActive(false);
 }
 startBtn.addEventListener('click', hideMenu);
 restartBtn.addEventListener('click', resetGame);

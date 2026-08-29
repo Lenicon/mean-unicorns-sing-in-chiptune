@@ -30,18 +30,25 @@ function noiseBuf_() {
     return noiseBuf;
 }
 
+let masterVolume = getStoredVolume();
+let masterGain = null;
+
 let comp, shaperNode, cleanGain;
 function ensureBus_() {
     if (comp) return;
     const c = ac_();
-    
+
+    masterGain = c.createGain();
+    masterGain.gain.value = masterVolume;
+    masterGain.connect(c.destination);
+
     comp = c.createDynamicsCompressor();
     comp.threshold.value = -22; 
     comp.knee.value = 4; 
     comp.ratio.value = 12; 
     comp.attack.value = 0.002; 
     comp.release.value = 0.1;
-    comp.connect(c.destination);
+    comp.connect(masterGain);
     
     shaperNode = c.createWaveShaper();
     const n = 256, curve = new Float32Array(n), amt = 7;
@@ -60,6 +67,13 @@ function ensureBus_() {
 
 function bus_() { ensureBus_(); return shaperNode; }
 function busClean_() { ensureBus_(); return cleanGain; }
+function master_() { ensureBus_(); return masterGain; }
+
+function setMasterVolume(v) {
+    masterVolume = Math.min(1, Math.max(0, v));
+    setStoredVolume(masterVolume);
+    if (masterGain) masterGain.gain.value = masterVolume;
+}
 
 function F(n) { return n == null ? 0 : 440 * Math.pow(2, n / 12); }
 
@@ -75,7 +89,7 @@ function sfxPew(t) {
     o.frequency.exponentialRampToValueAtTime(120, time + 0.12);
     g.gain.setValueAtTime(0.15, time);
     g.gain.exponentialRampToValueAtTime(0.001, time + 0.13);
-    o.connect(g); g.connect(c.destination);
+    o.connect(g); g.connect(master_());
     o.start(time); o.stop(time + 0.14);
 }
 
@@ -299,7 +313,7 @@ function startRiser(secDuration, t) {
     g.gain.setValueAtTime(0.0001, t);
     g.gain.exponentialRampToValueAtTime(0.03, t + secDuration * 0.9);
     g.gain.exponentialRampToValueAtTime(0.0001, t + secDuration);
-    o.connect(f); f.connect(g); g.connect(c.destination);
+    o.connect(f); f.connect(g); g.connect(master_());
     o.start(t); o.stop(t + secDuration + 0.1);
     riserOsc = o;
 }
@@ -391,15 +405,27 @@ function initAudio() {
     if (context.state === 'suspended') context.resume();
 }
 
-function startMusic() {
+function resetMusicPosition() {
     stopAllAudio();
     initAudio();
-    musicOn = true;
-    stepIdx = 0; 
-    elapsedAtSection = 0; 
-    sectionIdx = 0; 
-    riserOsc = null; 
+    stepIdx = 0;
+    elapsedAtSection = 0;
+    sectionIdx = 0;
+    riserOsc = null;
     padStarted = false;
+    nextStepTime = ac_().currentTime + 0.05;
+}
+
+function startMusic() {
+    resetMusicPosition();
+    musicOn = true;
+    scheduler();
+}
+
+function resumeMusic() {
+    if (musicOn) return;
+    initAudio();
+    musicOn = true;
     nextStepTime = ac_().currentTime + 0.05;
     scheduler();
 }
@@ -423,4 +449,17 @@ function stopAllAudio() {
         try { cleanGain.disconnect(); } catch (e) {}
         cleanGain = null;
     }
+    if (masterGain) {
+        try { masterGain.disconnect(); } catch (e) {}
+        masterGain = null;
+    }
 }
+
+function initVolumeControl() {
+    if (!volumeSlider) return;
+    volumeSlider.value = Math.round(masterVolume * 100);
+    volumeSlider.addEventListener('input', () => {
+        setMasterVolume(volumeSlider.value / 100);
+    });
+}
+window.addEventListener('DOMContentLoaded', initVolumeControl);
