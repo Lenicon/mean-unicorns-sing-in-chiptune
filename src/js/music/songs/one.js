@@ -163,20 +163,40 @@ const songOne = [
                 { t: "pos" },
                 { t: "pos" },
                 { t: "random", i:5 },
-                { t: "random", i:7 },
-                { t: "random", i:9 },
-                { t: "random", i:10 },
+                { t: "random", i:5 },
+                { t: "random", i:5 },
+                { t: "random", i:5 },
             ]
         },
         {
-            start: 125,
+            start: 124,
             bpm: 130,
             patterns: [
                 { t: "row", i:[0,1] },
                 { t: "row", i:[1,2] },
                 { t: "row", i:[2,3] },
                 { t: "row", i:[3,4] },
-                { t: "random", i:10 },
+            ]
+        },
+        {
+            start: 131,
+            bpm: 65,
+            patterns: [
+                { t: "row", i: [2] },
+                { t: "row", i: [1,3] },
+                { t: "cross", r: [0, 4], c: [0, 4] },
+                { t: "cross", r: [1, 3], c: [1, 3] },
+                { t: "col", i: [2] },
+                { t: "col", i: [1, 3] },
+                { t: "cross", r: [0, 4], c: [0, 4] },
+                { t: "cross", r: [1, 3], c: [1, 3] },
+            ]
+        },
+        {
+            start: 149,
+            bpm: 16.25,
+            patterns: [
+                { t: "row", i: [0,1,2,3,4] },
             ]
         },
     ],
