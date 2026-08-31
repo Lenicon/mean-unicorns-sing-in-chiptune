@@ -3,200 +3,240 @@ const songFive = [
     [
         {
             start: 0,
-            bpm: 32.5,
+            bpm: 75,
             patterns: [
-                { t: "center" },
-                { t: "area", r: [1,2,3], c: [1,2,3] }
+                { t: "checker", odd:true },
             ]
         },
         {
-            start: 5,
-            bpm: 32.5,
+            start: 1,
+            bpm: 150,
             patterns: [
-                { t: "row", i: [2] },
-                { t: "row", i: [1,3] },
-                { t: "cross", r: [0, 4], c: [0, 4] },
-                { t: "cross", r: [1, 3], c: [1, 3] },
-                { t: "col", i: [2] },
-                { t: "col", i: [1, 3] },
-                { t: "cross", r: [0, 4], c: [0, 4] },
-                { t: "cross", r: [1, 3], c: [1, 3] },
+                { t: "pos",},
             ]
         },
         {
-            start: 20,
-            bpm: 32.5,
+            start: 4,
+            bpm: 75,
             patterns: [
-                { t: "row", i: [0, 1, 2, 3] },
-                { t: "row", i: [1, 2, 3, 4] }
+                { t: "checker", odd:false },
             ]
         },
         {
-            start: 27,
-            bpm: 130,
+            start: 4.5,
+            bpm: 150,
             patterns: [
-                { t: "col", i:0 },
-                { t: "col", i:1 },
-                { t: "col", i:2 },
-                { t: "col", i:3 },
-                { t: "col", i:4 },
+                { t: "pos",},
+            ]
+        },
+        {
+            start: 7,
+            bpm: 75,
+            patterns: [
+                { t: "checker", odd:false },
+                { t: "checker", odd:true },
+            ]
+        },
+        {
+            start: 13,
+            bpm: 75,
+            patterns: [
+                { t: "area", r:[1,2,3],c:[1,2,3] },
+            ]
+        },
+        {
+            start: 14,
+            bpm: 75,
+            patterns: [
+                { t: "pos" },
+                { t: "random", i:5 },
+            ]
+        },
+        {
+            start: 19,
+            bpm: 75,
+            patterns: [
+                { t: "random", i:20 },
+                { t: "pos" },
+            ]
+        },
+        {
+            start: 25,
+            bpm: 37.5,
+            patterns: [
+                { t: "col", i:[0,1,2] },
+                { t: "col", i:[1,2,3] },
+                { t: "col", i:[4,3,2] },
+            ]
+        },
+        {
+            start: 30,
+            bpm: 150,
+            patterns: [
+                { t: "col", i:[0,1] },
+                { t: "col", i:[2] },
+                { t: "col", i:[3,4] },
+            ]
+        },
+        {
+            start: 32,
+            bpm: 37.5,
+            patterns: [
+                { t: "row", i:[0,1,2] },
+                { t: "row", i:[1,2,3] },
+                { t: "row", i:[4,3,2] },
+            ]
+        },
+        {
+            start: 36,
+            bpm: 150,
+            patterns: [
+                { t: "row", i:[0,1] },
+                { t: "row", i:[2] },
+                { t: "row", i:[3,4] },
+            ]
+        },
+        {
+            start: 38,
+            bpm: 150,
+            patterns: [
+                { t: "pos" },
+            ]
+        },
+        {
+            start: 40,
+            bpm: 75,
+            patterns: [
+                { t: "random", i:14 },
+            ]
+        },
+        {
+            start: 44,
+            bpm: 75,
+            patterns: [
+                { t: "row", i:[4,2,0] },
+                { t: "col", i:[4,2,0] },
+                { t: "row", i:[1,3] },
+                { t: "col", i:[1,3] },
+            ]
+        },
+        {
+            start: 48,
+            bpm: 75,
+            patterns: [
+                { t: "random", i:14 },
+            ]
+        },
+        {
+            start: 52,
+            bpm: 75,
+            patterns: [
+                { t: "row", i:[4,2,0] },
+                { t: "col", i:[4,2,0] },
+                { t: "row", i:[1,3] },
+                { t: "col", i:[1,3] },
+            ]
+        },
+        {
+            start: 57,
+            bpm: 75,
+            patterns: [
+                { t: "random", i:14 },
+            ]
+        },
+        {
+            start: 62,
+            bpm: 150,
+            patterns: [
+                { t: "row", i:0 },
+                { t: "row", i:1 },
+                { t: "row", i:2 },
+                { t: "row", i:3 },
                 { t: "row", i:4 },
                 { t: "row", i:3 },
                 { t: "row", i:2 },
                 { t: "row", i:1 },
                 { t: "row", i:0 },
+                { t: "col", i:0 },
+                { t: "col", i:1 },
+                { t: "col", i:2 },
+                { t: "col", i:3 },
+                { t: "col", i:4 },
+                { t: "col", i:3 },
+                { t: "col", i:2 },
+                { t: "col", i:1 },
+                { t: "col", i:0 },
             ]
-        },
-        {
-            start: 35,
-            bpm: 65,
-            patterns: [
-                { t: "cross", r: [0, 4], c: [0, 4] },
-                { t: "cross", r: [1, 3], c: [1, 3] },
-                { t: "area", r: [1, 2, 3], c: [1, 2, 3] },
-                { t: "cross", r: [1, 3], c: [1, 3] },
-                { t: "cross", r: [0, 4], c: [0, 4] },
-                { t: "area", r: [1, 2, 3], c: [1, 2, 3] }
-            ]
-        },
-        {
-            start: 49,
-            bpm: 65,
-            patterns: [
-                { t: "pos"},
-                { t: "random", i:15 },
-            ]
-        },
-        {
-            start: 57,
-            bpm: 65,
-            patterns: [
-                { t: "col", i: [1,2,3,4] },
-                { t: "col", i: [3,2,1,0] }
-            ]
-        },
-        {
-            start: 61,
-            bpm: 65,
-            patterns: [
-                { t: "cross", r: [0, 4], c: [0, 4] },
-                { t: "area", r: [1, 2, 3], c: [1, 2, 3] }
-            ]
-        },
-        {
-            start: 64,
-            bpm: 130,
-            patterns: [
-                { t: "row", i: 4 },
-                { t: "row", i: [4,3] },
-                { t: "row", i: [4,3,2] },
-                { t: "row", i: [4,3,2,1] }
-            ]
-        },
-        {
-            start: 66.5,
-            bpm: 65,
-            patterns: [{ t: "row", i: [0, 1, 2, 3] }]
-        },
-        {
-            start: 67,
-            bpm: 130,
-            patterns: [
-                { t: "row", i: 0 },
-                { t: "row", i: [0,1] },
-                { t: "row", i: [0,1,2] },
-                { t: "row", i: [0,1,2,3] }
-            ]
-        },
-        {
-            start: 69,
-            bpm: 65,
-            patterns: [{ t: "row", i: [4, 1, 2, 3] }]
         },
         {
             start: 70,
-            bpm: 65,
+            bpm: 150,
             patterns: [
-                { t: "cross", r: [0, 4], c: [0, 4] },
-                { t: "cross", r: [0, 1, 3, 4], c: [0, 1, 3, 4] },
-                { t: "area", r: [1, 2, 3], c: [1, 2, 3] }
+                { t: "cross", r:0, c:0 },
+                { t: "cross", r:1, c:1 },
+                { t: "cross", r:2, c:2 },
+                { t: "cross", r:3, c:3 },
+                { t: "cross", r:4, c:4 },
+                { t: "cross", r:4, c:4 },
+                { t: "cross", r:3, c:3 },
+                { t: "cross", r:2, c:2 },
+                { t: "cross", r:1, c:1 },
+                { t: "cross", r:0, c:0 },
             ]
         },
         {
-            start: 78,
-            bpm: 65,
+            start: 77,
+            bpm: 75,
             patterns: [
-                { t: "area", r: [1, 2, 3], c: [1, 2, 3] },
-                { t: "row", i: [1,3,4,0] },
-                { t: "cross", r: [1, 3], c: [1, 3] },
-                { t: "col", i: [1,2,3] },
-                { t: "cross", r: [4,0], c: [4,0] },
-            ]
-        },
-        {
-            start: 93,
-            bpm: 65,
-            patterns: [
-                { t: "col", i: [0,4] },
-                { t: "col", i: [1,3] },
-                { t: "cross", r:[2], c:[2] },
-                { t: "row", i: [1,3] },
-                { t: "row", i: [0,4] },
-            ]
-        },
-        {
-            start: 101,
-            bpm: 65,
-            patterns: [
-                { t: "checker", odd:true },
                 { t: "pos" },
-                { t: "checker", odd:false },
+                { t: "random", i:20 },
+            ]
+        },
+        {
+            start: 87,
+            bpm: 150,
+            patterns: [
                 { t: "pos" },
             ]
         },
         {
-            start: 109,
-            bpm: 130,
+            start: 90,
+            bpm: 75,
             patterns: [
-                { t: "pos" },
-                { t: "pos" },
-                { t: "pos" },
-                { t: "pos" },
-                { t: "random", i:5 },
-                { t: "random", i:5 },
-                { t: "random", i:5 },
-                { t: "random", i:5 },
+                { t: "row", i:[4,3,2] },
+                { t: "row", i:[0,1,2] },
+                { t: "col", i:[4,3,2] },
+                { t: "col", i:[0,1,2] },
             ]
         },
         {
-            start: 124,
-            bpm: 130,
+            start: 97,
+            bpm: 75,
             patterns: [
-                { t: "row", i:[0,1] },
-                { t: "row", i:[1,2] },
-                { t: "row", i:[2,3] },
-                { t: "row", i:[3,4] },
+                { t: "row", i:[4,3,2] },
+                { t: "row", i:[4,2,0] },
+                { t: "row", i:[0,1,2] },
+                { t: "col", i:[4,2,0] },
+                { t: "col", i:[4,3,2] },
+                { t: "row", i:[1,3] },
+                { t: "col", i:[0,1,2] },
+                { t: "col", i:[1,3] },
             ]
         },
         {
-            start: 131,
-            bpm: 65,
+            start: 115,
+            bpm: 150,
             patterns: [
-                { t: "row", i: [2] },
-                { t: "row", i: [1,3] },
-                { t: "cross", r: [0, 4], c: [0, 4] },
-                { t: "cross", r: [1, 3], c: [1, 3] },
-                { t: "col", i: [2] },
-                { t: "col", i: [1, 3] },
-                { t: "cross", r: [0, 4], c: [0, 4] },
-                { t: "cross", r: [1, 3], c: [1, 3] },
-            ]
-        },
-        {
-            start: 149,
-            bpm: 16.25,
-            patterns: [
-                { t: "row", i: [0,1,2,3,4] },
+                { t: "cross", r:0, c:0 },
+                { t: "cross", r:1, c:1 },
+                { t: "cross", r:2, c:2 },
+                { t: "cross", r:3, c:3 },
+                { t: "cross", r:4, c:4 },
+                { t: "cross", r:0, c:4 },
+                { t: "cross", r:1, c:3 },
+                { t: "cross", r:2, c:2 },
+                { t: "cross", r:3, c:1 },
+                { t: "cross", r:4, c:0 },
             ]
         },
     ],
