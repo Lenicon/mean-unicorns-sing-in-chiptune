@@ -78,6 +78,7 @@ function triggerIntroFlyOut() {
     }, 650);
 }
 function playOutro() {
+    sfxNeigh();
     unicornWrap.style.display = 'none';
     uniFlyCanvas.style.transition = 'none';
     uniFlyCanvas.style.left = UNI_DOCK_LEFT + 'px';
