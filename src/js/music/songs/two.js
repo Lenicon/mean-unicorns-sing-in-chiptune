@@ -1,14 +1,103 @@
 const songTwo = [
-    { name: "Once Upon A Ceros", time: 171, bpm: 140 },
+    { name: "Once Upon A Ceros", time: 171, bpm: 140, warn:3 },
     [
         {
             start: 0,
-            bpm: 35,
+            bpm: 140,
+            patterns: [
+                { t: "row", i:0 },
+                { t: "row", i:1 },
+                { t: "row", i:2 },
+                { t: "row", i:3 },
+                { t: "row", i:4 },
+            ]
+        },
+        {
+            start: 7,
+            bpm: 70,
+            patterns: [
+                { t: "cross",r:2,c:2 },
+                { t: "cross",r:1,c:1 },
+                { t: "cross",r:3,c:3 },
+                { t: "cross",r:4,c:4 },
+                { t: "cross",r:0,c:0 },
+            ]
+        },
+        {
+            start: 20,
+            bpm: 140,
+            patterns: [
+                { t: "pos" },
+            ]
+        },
+        {
+            start: 22,
+            bpm: 70,
+            patterns: [
+                { t: "area", r:[0,1,2], c:[0,1,2] },
+                { t: "area", r:[2,3,4], c:[0,1,2] },
+                { t: "area", r:[2,3,4], c:[2,3,4] },
+                { t: "area", r:[0,1,2], c:[2,3,4] },
+            ]
+        },
+        {
+            start: 25,
+            bpm: 140,
+            patterns: [
+                { t: "pos" },
+            ]
+        },
+        {
+            start: 29,
+            bpm: 70,
+            patterns: [
+                { t: "area", r:[0,1,2], c:[2,3,4] },
+                { t: "area", r:[2,3,4], c:[2,3,4] },
+                { t: "area", r:[2,3,4], c:[0,1,2] },
+                { t: "area", r:[0,1,2], c:[0,1,2] },
+            ]
+        },
+        {
+            start: 33,
+            bpm: 140,
+            patterns: [
+                { t: "pos" },
+            ]
+        },
+        {
+            start: 36,
+            bpm: 140,
             patterns: [
                 { t: "row", i:[0,1] },
-                { t: "row", i:[0,1,2,3] },
-                { t: "row", i:[4,3] },
-                { t: "row", i:[4,3,2,1] },
+                { t: "row", i:[1,2] },
+                { t: "row", i:[2,3] },
+                { t: "row", i:[3,4] },
+                { t: "row", i:[4,0] },
+            ]
+        },
+        {
+            start: 43,
+            bpm: 70,
+            patterns: [
+                { t: "checker", odd:true },
+                { t: "checker", odd:false },
+                { t: "checker", odd:true },
+                { t: "area", r:[1,2,3], c:[1,2,3] },
+            ]
+        },
+        {
+            start: 56,
+            bpm: 140,
+            patterns: [
+                { t:"pos" },
+            ]
+        },
+        {
+            start: 58,
+            bpm: 70,
+            patterns: [
+                { t: "area", r:[1,2,3], c:[1,2,3] },
+                { t: "cross", r:[0,4], c:[0,4] },
             ]
         },
     ],
