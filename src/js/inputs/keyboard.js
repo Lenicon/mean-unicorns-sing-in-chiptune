@@ -1,3 +1,5 @@
+if (window.Wavedash) Wavedash.init();
+
 down = {};
 M = { KeyW:38, KeyZ:38, ArrowUp:38, KeyA:37, KeyQ:37, ArrowLeft:37, KeyS:40, ArrowDown:40, KeyD:39, ArrowRight:39 };
 
