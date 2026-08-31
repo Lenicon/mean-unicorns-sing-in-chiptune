@@ -1,4 +1,8 @@
-# Mean Unicorns Sing in Chiptune
+<p align="center">
+  <img src=".website/cover.png" alt="Cover Art" width="500">
+</p>
+
+<h1 align="center">Mean Unicorns Sing In Chiptune</h1>
 
 **M.U.S.I.C.** is my VERY FIRST entry for the 2026 [JS13K GAME JAM](https://js13kgames.com).
 The theme for the competition is **Unicorns and Rainbows**.

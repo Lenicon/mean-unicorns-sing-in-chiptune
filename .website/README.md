@@ -2,7 +2,10 @@ For a long long time now, it's tradition for unicorns to offer a ride to the pur
 
 Prove you're worthy to ride them, beat your hi-scores, and dance to all FOUR songs!
 
-![Gameplay GIF](./gameplay.gif)
+
+<p align="center">
+  <img src="./gameplay.gif" alt="Demo GIF" width="720">
+</p>
 
 
 ## Controls
