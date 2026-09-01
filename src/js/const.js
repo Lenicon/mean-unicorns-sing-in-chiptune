@@ -1,8 +1,5 @@
-var WARN_BEATS = 1;
 const CLUTCH_BONUS = 15;
-const N = 5, CELL = 60, GAP = 4, PAD = 6, PLAYER_PX = 6, UNI_PX = 5;
-const GRID_W = PAD * 2 + N * CELL + (N - 1) * GAP;
-const UNI_DOCK_LEFT = (GRID_W - UNI_BMP[0].length * UNI_PX) / 2;
+const N = 5, PLAYER_PX = 6, UNI_PX = 5;
 const UNI_DOCK_TOP = -60;
 const hud = document.getElementById('hud');
 const gridEl = document.getElementById('grid');
@@ -21,8 +18,10 @@ const DEFAULT_MSG = 'Arrow keys / WASD to move';
 const prevBtn = document.getElementById('prevSongBtn');
 const nextBtn = document.getElementById('nextSongBtn');
 const songTitle = document.getElementById('songTitle');
-
-
+var WARN_BEATS = 1;
+var CELL = 60, GAP = 4, PAD = 6;
+var GRID_W = PAD * 2 + N * CELL + (N - 1) * GAP;
+var UNI_DOCK_LEFT = (GRID_W - UNI_BMP[0].length * UNI_PX) / 2;
 var cells = [];
 var player = { r: 4, c: 2, facingLeft: false };
 var lives = 3;
@@ -39,7 +38,6 @@ var startTime = 0;
 var currentStageIdx = -1;
 var stageBeatCounter = 0;
 var canMove = true;
-
 var audioCtx = null;
 const
 C0 = -57, CS0 = -56, DB0 = -56, D0 = -55, DS0 = -54, EB0 = -54, E0 = -53, F0 = -52, FS0 = -51, GB0 = -51, G0 = -50, GS0 = -49, AB0 = -49, A0 = -48, AS0 = -47, BB0 = -47, B0 = -46,

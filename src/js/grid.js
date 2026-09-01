@@ -1,3 +1,24 @@
+function updateGridMetrics() {
+    if (!cells.length) return;
+    const cellRect = cells[0][0].getBoundingClientRect();
+    const gridStyle = getComputedStyle(gridEl);
+    CELL = cellRect.width;
+    GAP = parseFloat(gridStyle.columnGap || gridStyle.gap) || GAP;
+    PAD = parseFloat(gridStyle.paddingLeft) || PAD;
+    GRID_W = PAD * 2 + N * CELL + (N - 1) * GAP;
+    UNI_DOCK_LEFT = (GRID_W - UNI_BMP[0].length * UNI_PX) / 2;
+}
+let _gridResizeTimer = null;
+window.addEventListener('resize', () => {
+    clearTimeout(_gridResizeTimer);
+    _gridResizeTimer = setTimeout(() => {
+        if (!cells.length || !playerCanvas) return;
+        updateGridMetrics();
+        drawPlayer();
+        if (!introDone) positionUniFlyAt(player.r, player.c);
+    }, 150);
+});
+
 function buildGrid() {
     stopAllAudio();
     gridEl.innerHTML = '';
@@ -25,13 +46,17 @@ function buildGrid() {
     gridEl.appendChild(uniFlyCanvas);
     drawSprite(uniFlyCanvas, UNI_BMP, UNI_PAL, UNI_PX);
     drawSprite(unicornCanvas, UNI_BMP, UNI_PAL, UNI_PX);
+    updateGridMetrics();
+    resetHearts();
+    setupIntro();
+}
+function resetHearts() {
     heartsEl.innerHTML = '';
     for (let i = 0; i < 3; i++) {
         const h = document.createElement('span');
         h.className = 'heart';
         heartsEl.appendChild(h);
     }
-    setupIntro();
 }
 function setupIntro() {
     hud.style.display = 'none';
@@ -63,12 +88,15 @@ function positionUniFlyAt(r, c) {
     uniFlyCanvas.style.left = (PAD + c * (CELL + GAP) + (CELL - uniFlyCanvas.width) / 2) + 'px';
     uniFlyCanvas.style.top = (PAD + r * (CELL + GAP) + (CELL - uniFlyCanvas.height) / 2) + 'px';
 }
+function dockUniFly() {
+    uniFlyCanvas.style.left = UNI_DOCK_LEFT + 'px';
+    uniFlyCanvas.style.top = UNI_DOCK_TOP + 'px';
+}
 function triggerIntroFlyOut() {
     introDone = true;
     sfxNeigh();
     screenshake(400);
-    uniFlyCanvas.style.left = UNI_DOCK_LEFT + 'px';
-    uniFlyCanvas.style.top = UNI_DOCK_TOP + 'px';
+    dockUniFly();
     setTimeout(() => {
         uniFlyCanvas.style.opacity = '0';
         unicornWrap.style.display = '';
@@ -81,8 +109,7 @@ function playOutro() {
     sfxNeigh();
     unicornWrap.style.display = 'none';
     uniFlyCanvas.style.transition = 'none';
-    uniFlyCanvas.style.left = UNI_DOCK_LEFT + 'px';
-    uniFlyCanvas.style.top = UNI_DOCK_TOP + 'px';
+    dockUniFly();
     uniFlyCanvas.style.opacity = '1';
     void uniFlyCanvas.offsetWidth;
     uniFlyCanvas.style.transition = '';

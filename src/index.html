@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
     <title>Mean Unicorns Sing In Chiptune by Len.icon</title>
     <link rel="stylesheet" href="style.css">
-    </link>
 </head>
-
 <body>
     <div id="valleyBg" aria-hidden="true">
         <div id="sky"></div>
@@ -27,12 +25,10 @@
             </div>
             <div class="menu-divider"></div>
             <div id="menuTagline">For js13kGame Jam</div>
-
             <div id="menuTabs">
                 <button type="button" class="tab-btn active" data-tab="song" id="tabSongBtn">Song</button>
                 <button type="button" class="tab-btn" data-tab="controls" id="tabControlsBtn">Controls</button>
             </div>
-
             <div class="tab-panel active" id="tab-song">
                 <div id="songPicker">
                     <span class="song-label">SELECT SONG</span>
@@ -55,7 +51,6 @@
                     <div><span>High Score</span><span id="statsHighScore" class="stat-value">0</span></div>
                 </div>
             </div>
-
             <div class="tab-panel" id="tab-controls">
                 <div id="menuControls">
                     <div><span>Move</span><span class="key">
@@ -68,7 +63,6 @@
                     <div><span>Main Menu</span><span class="key"><kbd>M</kbd></span></div>
                 </div>
             </div>
-
             <button id="startBtn">Ride The Unicorn</button>
         </div>
     </div>
@@ -105,19 +99,14 @@
             <div class="tc-spacer"></div>
         </div>
     </div>
-
     <script src="js/inputs/keyboard.js"></script>
     <script src="js/sprites.js"></script>
     <script src="js/const.js"></script>
     <script src="js/stats.js"></script>
-
     <script src="js/music/songs/one.js"></script>
     <script src="js/music/songs/two.js"></script>
-    <!-- <script src="js/music/songs/three.js"></script> -->
-    <!-- <script src="js/music/songs/four.js"></script> -->
     <script src="js/music/songs/five.js"></script>
     <script src="js/music/songs/six.js"></script>
-
     <script src="js/music/audio.js"></script>
     <script src="js/music/song.js"></script>
     <script src="js/ui.js"></script>
@@ -125,5 +114,4 @@
     <script src="js/game.js"></script>
     <script src="js/inputs/touch.js"></script>
 </body>
-
 </html>

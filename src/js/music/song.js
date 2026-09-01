@@ -1,6 +1,6 @@
 SONGS = [songOne,songTwo,songFive,songSix];
 currentSongIdx = 0;
-const setSong = (idx) => {
+let setSong=(idx)=>{
     currentSongIdx = (idx + SONGS.length) % SONGS.length;
     if (typeof STAGES !== 'undefined' && typeof SECTIONS !== 'undefined') {
         STAGES = getSongPattern();
@@ -13,19 +13,17 @@ const setSong = (idx) => {
     }
     updateSongDisplay();
 };
+let nextSong=()=>setSong(currentSongIdx + 1);
+let prevSong =()=>setSong(currentSongIdx - 1);
+let getSong=()=>SONGS[currentSongIdx];
+let getSongName=()=> getSong()[0].name;
+let getSongTime=()=> getSong()[0].time;
+let getSongBPM=()=> getSong()[0].bpm;
+let getSongWarn=()=> getSong()[0].warn;
+let getSongPattern=()=> getSong()[1];
+let getSongMusic=()=> getSong()[2];
 
-const nextSong = () => setSong(currentSongIdx + 1);
-const prevSong = () => setSong(currentSongIdx - 1);
-
-const getSong = () => SONGS[currentSongIdx];
-const getSongName = () => getSong()[0].name;
-const getSongTime = () => getSong()[0].time;
-const getSongBPM = () => getSong()[0].bpm;
-const getSongWarn = () => getSong()[0].warn;
-const getSongPattern = () => getSong()[1];
-const getSongMusic = () => getSong()[2];
-
-function updateSongDisplay() {
+let updateSongDisplay=()=>{
     if (songTitle && SONGS[currentSongIdx]) {
         songTitle.textContent = getSongName();
         const wasPlaying = musicOn;
@@ -39,41 +37,29 @@ function updateSongDisplay() {
     }
 }
 
-function updatePreviewButton() {
-    if (previewPlayBtn) previewPlayBtn.innerHTML = musicOn ? '&#10074;&#10074;' : '&#9654;';
-}
+let updatePreviewButton=()=> {if (previewPlayBtn) previewPlayBtn.innerHTML = musicOn ? '&#10074;&#10074;' : '&#9654;';}
 
-function togglePreview() {
+let togglePreview=()=>{
     initAudio();
     if (musicOn) stopMusic();
     else resumeMusic();
     updatePreviewButton();
 }
 
-function initSongPicker() {
-
-
+let initSongPicker=()=>{
+    setSong(0);
     nextBtn.addEventListener('click', nextSong);
     nextBtn.addEventListener('click', sfxButtonClick);
-    nextBtn.addEventListener('mouseover', sfxButtonHover);
     prevBtn.addEventListener('click', prevSong);
     prevBtn.addEventListener('click', sfxButtonClick);
-    prevBtn.addEventListener('mouseover', sfxButtonHover);
-
-    if (previewPlayBtn) {
-        previewPlayBtn.addEventListener('click', togglePreview);
-        previewPlayBtn.addEventListener('mouseover', sfxButtonHover);
-    }
-
+    if (previewPlayBtn) previewPlayBtn.addEventListener('click', togglePreview);
     songTitle.textContent = getSongName();
     startMusic();
     updatePreviewButton();
     updateStatsDisplay();
 }
-
 window.addEventListener('DOMContentLoaded', initSongPicker);
-
-function keyToPattern(p) {
+let keyToPattern=(p)=>{
     const list = [];
     const toArr = (val) => Array.isArray(val) ? val : (val !== undefined ? [val] : []);
     if (p.t === 'row') { const rows = toArr(p.i ?? p.r); rows.forEach(r => { for (let c = 0; c < N; c++) list.push([r, c]); }); }
@@ -88,4 +74,3 @@ function keyToPattern(p) {
     else if (p.t === 'pos') { list.push([player.r, player.c]); }
     return list;
 }
-setSong(0);

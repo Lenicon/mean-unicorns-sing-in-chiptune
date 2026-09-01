@@ -1,4 +1,4 @@
-function popScore(pts, isClutch = false) {
+let popScore=(pts, isClutch = false)=> {
     const floatScore = document.getElementById('floatScore');
     if (!floatScore) return;
     const pop = document.createElement('div');
@@ -8,11 +8,11 @@ function popScore(pts, isClutch = false) {
     floatScore.appendChild(pop);
     setTimeout(() => pop.remove(), 800);
 }
-function screenshake(d) {
+let screenshake=(d)=> {
     document.body.classList.add('shake');
     setTimeout(() => document.body.classList.remove('shake'), d);
 }
-function flashMsg(text, cls, revertTo) {
+let flashMsg=(text, cls, revertTo)=> {
     msgEl.textContent = text;
     if (cls) msgEl.classList.add(cls);
     setTimeout(() => {
@@ -21,7 +21,7 @@ function flashMsg(text, cls, revertTo) {
     }, 650);
 }
 
-function initTabs() {
+let initTabs=()=>{
     const tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -30,7 +30,6 @@ function initTabs() {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + target));
             sfxButtonClick();
         });
-        btn.addEventListener('mouseover', sfxButtonHover);
     });
 }
 window.addEventListener('DOMContentLoaded', initTabs);

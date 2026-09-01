@@ -1,21 +1,24 @@
 STAGES = getSongPattern();
 
-function elapsedSeconds() {
-    return (Date.now() - startTime) / 1000;
-}
-function stageForTime(t) {
+let elapsedSeconds = () => (Date.now() - startTime) / 1000;
+let stopTimers = () => { clearTimeout(timer); clearInterval(clockTimer); };
+let setEndButtons = (show) => {
+    restartBtn.style.display = show ? 'inline-block' : 'none';
+    menuBtn.style.display = show ? 'inline-block' : 'none';
+};
+let stageForTime = (t) => {
     let idx = 0;
     for (let i = 0; i < STAGES.length; i++) { if (t >= STAGES[i].start) idx = i; }
     return idx;
-}
-function clearCells() {
+};
+let clearCells = () => {
     cells.forEach(row => row.forEach(cell => {
         cell.classList.remove('fire', 'warn');
         cell.style.background = '';
         cell.querySelector('.cd').textContent = '';
     }));
-}
-function checkLastSecondDodges() {
+};
+let checkLastSecondDodges = () => {
     const now = elapsedSeconds();
     pending.forEach(p => {
         if (p.lastSecond) return;
@@ -25,8 +28,8 @@ function checkLastSecondDodges() {
             if (p.cells.some(([r, c]) => player.r === r && player.c === c)) p.lastSecond = true;
         }
     });
-}
-function tick() {
+};
+let tick = () => {
     if (!running) return;
     const elapsed = elapsedSeconds();
     if (elapsed >= GAME_DURATION_SECONDS) { endGame(true); return; }
@@ -106,14 +109,14 @@ function tick() {
     updateCellVisuals();
     drawPlayer();
     timer = setTimeout(tick, 60000 / bpm);
-}
-function updateClock() {
+};
+let updateClock = () => {
     if (!running) return;
     timeValEl.textContent = Math.min(elapsedSeconds(), GAME_DURATION_SECONDS).toFixed(1);
     checkLastSecondDodges();
     updateCellVisuals();
-}
-function move(dr, dc) {
+};
+let move = (dr, dc) => {
     if (!gameStarted || !canMove) return;
     const nr = player.r + dr, nc = player.c + dc;
     if (nr < 0 || nr >= N || nc < 0 || nc >= N) return;
@@ -121,26 +124,22 @@ function move(dr, dc) {
     if (dc < 0) player.facingLeft = true;
     if (dc > 0) player.facingLeft = false;
     drawPlayer();
-    if (!introDone && [0, 1].includes(player.r) && [1, 2, 3].includes(player.c)) { triggerIntroFlyOut(); }
-}
-function endGame(survived) {
+    if (!introDone && [0, 1].includes(player.r) && [1, 2, 3].includes(player.c)) triggerIntroFlyOut();
+};
+let endGame = (survived) => {
     clearCells();
     canMove = false;
     running = false;
-    clearTimeout(timer);
-    clearInterval(clockTimer);
+    stopTimers();
     timeValEl.textContent = Math.min(elapsedSeconds(), GAME_DURATION_SECONDS).toFixed(1);
     msgEl.classList.remove('clutch');
     msgEl.textContent = survived ? 'Unicorn Likes You!' : 'Game Over';
-    restartBtn.style.display = 'inline-block';
-    menuBtn.style.display = 'inline-block';
-    clearCells();
+    setEndButtons(true);
     stopMusic();
     setTouchControlsActive(false);
 
     const songName = getSongName();
-    setLastScore(songName, score);
-    const isNewHigh = setHighScoreIfBetter(songName, score);
+    const isNewHigh = setScore(songName, score);
     if (highScoreVal) highScoreVal.textContent = getHighScore(songName);
     updateStatsDisplay();
     if (isNewHigh) {
@@ -149,13 +148,12 @@ function endGame(survived) {
     }
 
     if (survived) playOutro();
-    else { playerCanvas.style.transform = 'rotate(-90deg)'; stopAllAudio() }
-}
-function resetAll(){
+    else { playerCanvas.style.transform = 'rotate(-90deg)'; stopAllAudio(); }
+};
+let resetAll = () => {
     hud.style.display = 'flex';
     canMove = true;
-    clearTimeout(timer);
-    clearInterval(clockTimer);
+    stopTimers();
     pending = [];
     score = 0;
     lives = 3;
@@ -167,25 +165,19 @@ function resetAll(){
     if (highScoreVal) highScoreVal.textContent = getHighScore(getSongName());
     msgEl.classList.remove('clutch');
     msgEl.textContent = DEFAULT_MSG;
-    restartBtn.style.display = 'none';
-    menuBtn.style.display = 'none';
+    setEndButtons(false);
     clearCells();
-    heartsEl.innerHTML = '';
-    for (let i = 0; i < 3; i++) {
-        const h = document.createElement('span');
-        h.className = 'heart';
-        heartsEl.appendChild(h);
-    }
-}
-function resetGame() {
+    resetHearts();
+};
+let resetGame = () => {
     sfxButtonClick();
     resetAll();
     setupGameplay();
     stopAllAudio();
     launchGame();
     setTouchControlsActive(true);
-}
-function launchGame() {
+};
+let launchGame = () => {
     if (running) return;
     running = true;
     initAudio();
@@ -193,8 +185,8 @@ function launchGame() {
     startMusic();
     clockTimer = setInterval(updateClock, 100);
     timer = setTimeout(tick, 60000 / STAGES[0].bpm);
-}
-function hideMenu() {
+};
+let hideMenu = () => {
     if (gameStarted) return;
     sfxPlay();
     setSong(currentSongIdx);
@@ -206,29 +198,22 @@ function hideMenu() {
     startOverlay.style.display = 'none';
     stopAllAudio();
     setTouchControlsActive(true);
-}
-function returnToMenu() {
+};
+let returnToMenu = () => {
     running = false;
     gameStarted = false;
     canMove = false;
-    clearTimeout(timer);
-    clearInterval(clockTimer);
+    stopTimers();
     stopAllAudio();
     clearCells();
     setupIntro();
     sfxButtonClick();
     startOverlay.style.display = 'flex';
-    restartBtn.style.display = 'none';
-    menuBtn.style.display = 'none';
+    setEndButtons(false);
     startMusic();
     updatePreviewButton();
     updateStatsDisplay();
     setTouchControlsActive(false);
-}
-startBtn.addEventListener('click', hideMenu);
-restartBtn.addEventListener('click', resetGame);
-menuBtn.addEventListener('click', returnToMenu);
-startBtn.addEventListener('mouseover',sfxButtonHover);
-restartBtn.addEventListener('mouseover',sfxButtonHover);
-menuBtn.addEventListener('mouseover',sfxButtonHover);
+};
+[[startBtn, hideMenu], [restartBtn, resetGame], [menuBtn, returnToMenu]].forEach(([btn, fn]) => btn.addEventListener('click', fn));
 buildGrid();

@@ -12,8 +12,6 @@ const JS_FILES = [
   // MUSIC
   'src/js/music/songs/one.js',
   'src/js/music/songs/two.js',
-  // 'src/js/music/songs/three.js',
-  // 'src/js/music/songs/four.js',
   'src/js/music/songs/five.js',
   'src/js/music/songs/six.js',
   
@@ -22,47 +20,15 @@ const JS_FILES = [
   'src/js/game.js',
   'src/js/ui.js',
   'src/js/grid.js',
-  'src/js/game.js',
   'src/js/inputs/touch.js',
 ];
 
-// Global states to track patterns across ALL song files
 const patternVars = {};
 const trackVars = {};
 const pDeclarations = [];
 const tDeclarations = [];
 let pCount = 0;
 let tCount = 0;
-
-function extractPatterns(code) {
-    // 1. Match Pattern Objects
-    const patternRegex = /\{\s*t:\s*['"][a-zA-Z]+['"][^{}]*\}/g;
-    
-    code = code.replace(patternRegex, (match) => {
-        const min = match.replace(/\s+/g, ''); 
-        if (!patternVars[min]) {
-            const varName = `p_${pCount++}`;
-            patternVars[min] = varName;
-            pDeclarations.push(`const ${varName} = ${match};`);
-        }
-        return patternVars[min];
-    });
-
-    // 2. Match Audio Track Objects
-    const trackRegex = /\{\s*dur:\s*[^,]+,\s*wave:\s*['"][a-z]+['"],\s*vol:\s*[\d.]+,\s*drums:\s*['"][a-z]+['"],\s*lead:\s*\[[\s\S]*?\],\s*bass:\s*\[[\s\S]*?\]\s*\}/g;
-
-    code = code.replace(trackRegex, (match) => {
-        const min = match.replace(/\s+/g, ''); 
-        if (!trackVars[min]) {
-            const varName = `trk_${tCount++}`;
-            trackVars[min] = varName;
-            tDeclarations.push(`const ${varName} = ${match};`);
-        }
-        return trackVars[min];
-    });
-
-    return code; // Return the code WITH replacements, but NO declarations yet
-}
 
 async function build() {
   const { Packer } = await import('roadroller');
@@ -78,17 +44,9 @@ async function build() {
     }
     
     let fileCode = fs.readFileSync(file, 'utf8');
-    
-    // Process only the song files
-    // if (file.includes('music/songs/')) {
-    //     fileCode = extractPatterns(fileCode);
-    // }
-    
     rawJS += fileCode + '\n';
-    // rawJS += '\n';
   }
 
-  // Prepend ALL collected declarations once at the top of the bundled code
   let headers = '';
   if (pDeclarations.length > 0) headers += pDeclarations.join('\n') + '\n';
   if (tDeclarations.length > 0) headers += tDeclarations.join('\n') + '\n';
@@ -135,18 +93,21 @@ async function build() {
       .replace(/\/\*[\s\S]*?\*\//g, '')
       .replace(/\s+/g, ' ')
       .replace(/\s*([{}:;,])\s*/g, '$1')
+      .replace(/;}/g, '}')
       .trim();
   }
 
   console.log('Generating bundled dist/index.html...');
   let html = fs.readFileSync('src/index.html', 'utf8');
+  html = html.replace(/<!--[\s\S]*?-->/g, '');
   html = html.replace(/<script src=".*?"><\/script>/g, '');
+  html = html.replace(/<link[^>]*rel="stylesheet"[^>]*>\s*<\/link>/gi, '');
   html = html.replace(/<link[^>]*rel="stylesheet"[^>]*>/gi, '');
 
   if (css) html = html.replace('</head>', `<style>${css}</style></head>`);
   html = html.replace('</body>', `<script>${packedJS}</script></body>`);
 
-  html = html.replace(/\s+/g, ' ').replace(/> </g, '><');
+  html = html.replace(/\s+/g, ' ').replace(/> </g, '><').trim();
 
   if (!fs.existsSync('dist')) fs.mkdirSync('dist');
   const htmlPath = path.join('dist', 'index.html');
@@ -171,6 +132,12 @@ async function build() {
 
     console.log(`\nBuild successful!`);
     console.log(`Output: ${zipPath} (${size} / ${limit} bytes — ${pct}% budget used)`);
+
+    if (size > limit){
+      console.log(`\nOverlimit! Rebuilding...`);
+      build();
+    }
+
   } catch (err) {
     console.error('\nCould not run ECT binary.');
     console.error('Make sure ect.exe is saved directly in your project root folder.');
