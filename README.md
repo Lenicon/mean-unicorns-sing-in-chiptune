@@ -14,6 +14,9 @@ The game is a 2D, retro, uncanny-looking rhythm game. Your goal is to survive th
 > Prove you're worthy to ride them and complete all FIVE songs!
 
 
+For the music I created my own music maker: [Lily Tunes](https://lenicon.itch.io/lily-tunes?secret=ZkSGe0NShfiFu9WKym6N7wBbq10)
+
+
 # Yap Session
 
 Holy moly, didn't know it was possible to create a 13kb game nowadays. I've been researching at past entries, especially **CLAWSTRIKE**. So thank you @remvst for making CLAWSTRIKE which enabled me to understand more about compression via reading your code! I almost lost my way thinking I can do this by just writing all of the code in a single index.html file!
